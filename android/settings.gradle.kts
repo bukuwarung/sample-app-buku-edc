@@ -8,6 +8,7 @@ pluginManagement {
             }
         }
         mavenCentral()
+        mavenLocal()
         gradlePluginPortal()
     }
 }
@@ -15,6 +16,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
+        mavenLocal()
         mavenCentral()
     }
 }
@@ -22,5 +24,5 @@ dependencyResolutionManagement {
 rootProject.name = "Sample Buku EDC"
 include(":app")
 include(":domain")
+include(":ui")
 include(":data")
-include(":app:ui")
