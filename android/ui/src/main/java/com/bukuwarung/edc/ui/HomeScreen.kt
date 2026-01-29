@@ -1,6 +1,8 @@
 package com.bukuwarung.edc.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,20 +13,39 @@ import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.annotation.StringRes
 import com.bukuwarung.edc.ui.theme.*
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel
+) {
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                is HomeUiEvent.ShowToast -> {
+                    val label = context.getString(event.action.labelResId)
+                    Toast.makeText(context, "$label clicked", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -86,11 +107,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
                 // Grid
                 val items = listOf(
-                    ActionItemData(stringResource(R.string.home_action_transfer), Icons.Default.CreditCard),
-                    ActionItemData(stringResource(R.string.home_action_cek_saldo), Icons.Default.CreditCard),
-                    ActionItemData(stringResource(R.string.home_action_tarik_tunai), Icons.Default.FileDownload),
-                    ActionItemData(stringResource(R.string.home_action_riwayat), Icons.AutoMirrored.Filled.Assignment),
-                    ActionItemData(stringResource(R.string.home_action_pengaturan), Icons.Default.Settings)
+                    ActionItemData(HomeAction.Transfer, Icons.Default.CreditCard),
+                    ActionItemData(HomeAction.CekSaldo, Icons.Default.CreditCard),
+                    ActionItemData(HomeAction.TarikTunai, Icons.Default.FileDownload),
+                    ActionItemData(HomeAction.Riwayat, Icons.AutoMirrored.Filled.Assignment),
+                    ActionItemData(HomeAction.Pengaturan, Icons.Default.Settings)
                 )
 
                 LazyVerticalGrid(
@@ -101,7 +122,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     userScrollEnabled = false
                 ) {
                     items(items) { item ->
-                        ActionItem(item)
+                        ActionItem(
+                            item = item,
+                            onClick = { clickedItem ->
+                                viewModel.onActionClick(clickedItem.action)
+                            }
+                        )
                     }
                 }
             }
@@ -110,18 +136,32 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 }
 
 data class ActionItemData(
-    val title: String,
+    val action: HomeAction,
     val icon: ImageVector
 )
 
+enum class HomeAction(@StringRes val labelResId: Int) {
+    Transfer(R.string.home_action_transfer),
+    CekSaldo(R.string.home_action_cek_saldo),
+    TarikTunai(R.string.home_action_tarik_tunai),
+    Riwayat(R.string.home_action_riwayat),
+    Pengaturan(R.string.home_action_pengaturan)
+}
+
 @Composable
-fun ActionItem(item: ActionItemData) {
+fun ActionItem(
+    item: ActionItemData,
+    onClick: (ActionItemData) -> Unit
+) {
+    val label = stringResource(item.action.labelResId)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
-            modifier = Modifier.size(72.dp),
+            modifier = Modifier
+                .size(72.dp)
+                .clickable { onClick(item) },
             shape = RoundedCornerShape(16.dp),
             color = Colors.White,
             border = androidx.compose.foundation.BorderStroke(1.dp, Colors.SurfaceBorder),
@@ -133,7 +173,7 @@ fun ActionItem(item: ActionItemData) {
             ) {
                 Icon(
                     imageVector = item.icon,
-                    contentDescription = item.title,
+                    contentDescription = label,
                     modifier = Modifier.size(36.dp),
                     tint = Colors.IconBlue
                 )
@@ -141,7 +181,7 @@ fun ActionItem(item: ActionItemData) {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = item.title,
+            text = label,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
@@ -153,5 +193,5 @@ fun ActionItem(item: ActionItemData) {
 @Preview(showBackground = true, backgroundColor = Colors.PrimaryGreenColor)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(viewModel = HomeViewModel())
 }
