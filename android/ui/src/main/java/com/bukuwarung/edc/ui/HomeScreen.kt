@@ -31,7 +31,8 @@ import com.bukuwarung.edc.ui.theme.*
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    onNavigateToTransfer: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -41,6 +42,9 @@ fun HomeScreen(
                 is HomeUiEvent.ShowToast -> {
                     val label = context.getString(event.action.labelResId)
                     Toast.makeText(context, "$label clicked", Toast.LENGTH_SHORT).show()
+                }
+                HomeUiEvent.NavigateToTransfer -> {
+                    onNavigateToTransfer()
                 }
             }
         }
@@ -193,5 +197,5 @@ fun ActionItem(
 @Preview(showBackground = true, backgroundColor = Colors.PrimaryGreenColor)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(viewModel = HomeViewModel())
+    HomeScreen(viewModel = HomeViewModel(), onNavigateToTransfer = {})
 }
