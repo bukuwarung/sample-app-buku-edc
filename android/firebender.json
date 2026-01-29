@@ -1,0 +1,38 @@
+{
+  "rules": [
+    {
+      "filePathMatches": "*",
+      "rulesPaths": "AGENTS.md"
+    }
+  ],
+  "mcpServers": {
+    "Figma Desktop": {
+      "url": "http://127.0.0.1:3845/mcp"
+    },
+    "mobile-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mobilenext/mobile-mcp@latest"
+      ]
+    }
+  },
+  "mcpEnvFile": ".env",
+  "commands": [
+    {
+      "name": "apply",
+      "path": "commands/openspec/apply.md",
+      "mode": "auto"
+    },
+    {
+      "name": "archive",
+      "path": "commands/openspec/archive.md",
+      "mode": "auto"
+    },
+    {
+      "name": "proposal",
+      "path": "commands/openspec/proposal.md",
+      "mode": "auto"
+    }
+  ]
+}

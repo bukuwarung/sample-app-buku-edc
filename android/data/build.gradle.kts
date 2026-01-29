@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dagger.hilt.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -33,10 +35,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation("com.bukuwarung.edc.sdk:core:0.1.0-SNAPSHOT")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
