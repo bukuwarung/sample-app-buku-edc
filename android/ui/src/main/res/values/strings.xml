@@ -1,0 +1,11 @@
+<resources>
+    <string name="home_title">Client Interface</string>
+    <string name="home_mini_atm">MiniATM</string>
+    <string name="home_action_transfer">Transfer</string>
+    <string name="home_action_cek_saldo">Cek Saldo</string>
+    <string name="home_action_tarik_tunai">Tarik Tunai</string>
+    <string name="home_action_riwayat">Riwayat</string>
+    <string name="home_action_pengaturan">Pengaturan</string>
+    <string name="content_description_bluetooth">Bluetooth</string>
+    <string name="content_description_print">Print</string>
+</resources>
