@@ -10,10 +10,15 @@ class HomeViewModel : ViewModel() {
     val uiEvents: SharedFlow<HomeUiEvent> = _uiEvents.asSharedFlow()
 
     fun onActionClick(action: HomeAction) {
-        _uiEvents.tryEmit(HomeUiEvent.ShowToast(action))
+        if (action == HomeAction.Transfer) {
+            _uiEvents.tryEmit(HomeUiEvent.NavigateToTransfer)
+        } else {
+            _uiEvents.tryEmit(HomeUiEvent.ShowToast(action))
+        }
     }
 }
 
 sealed interface HomeUiEvent {
     data class ShowToast(val action: HomeAction) : HomeUiEvent
+    data object NavigateToTransfer : HomeUiEvent
 }
