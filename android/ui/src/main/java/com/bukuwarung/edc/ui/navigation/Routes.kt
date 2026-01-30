@@ -18,4 +18,10 @@ sealed class Screen(val route: String) {
     data object BalanceCheckPin : Screen("balance_check_pin")
     data object BalanceCheckSummary : Screen("balance_check_summary")
     data object BalanceCheckReceipt : Screen("balance_check_receipt")
+
+    // Settings Flow
+    data object Settings : Screen("settings")
+    data object SettingsAccount : Screen("settings_account")
+    data object SettingsEditStoreName : Screen("settings_edit_store_name")
+    data object SettingsBankAccounts : Screen("settings_bank_accounts")
 }

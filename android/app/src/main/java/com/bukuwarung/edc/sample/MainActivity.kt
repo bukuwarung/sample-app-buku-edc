@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +18,10 @@ import com.bukuwarung.edc.ui.balance.BalanceCheckSummaryScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckViewModel
 import com.bukuwarung.edc.ui.common.FlowVariant
 import com.bukuwarung.edc.ui.navigation.Screen
+import com.bukuwarung.edc.ui.settings.SettingsAccountScreen
+import com.bukuwarung.edc.ui.settings.SettingsBankAccountsScreen
+import com.bukuwarung.edc.ui.settings.SettingsEditStoreNameScreen
+import com.bukuwarung.edc.ui.settings.SettingsMenuScreen
 import com.bukuwarung.edc.ui.theme.Colors
 import com.bukuwarung.edc.ui.transfer.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,6 +54,9 @@ fun MainNavigation() {
                 },
                 onNavigateToBalanceCheck = {
                     navController.navigate(Screen.BalanceCheckSelectAccount.route)
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
                 }
             )
         }
@@ -197,6 +204,31 @@ fun MainNavigation() {
                 onClose = {
                     navController.popBackStack(Screen.Home.route, false)
                 }
+            )
+        }
+
+        // Settings Flow
+        composable(Screen.Settings.route) {
+            SettingsMenuScreen(
+                onBack = { navController.popBackStack() },
+                onAccountClick = { navController.navigate(Screen.SettingsAccount.route) },
+                onBankAccountsClick = { navController.navigate(Screen.SettingsBankAccounts.route) }
+            )
+        }
+        composable(Screen.SettingsAccount.route) {
+            SettingsAccountScreen(
+                onBack = { navController.popBackStack() },
+                onEditStoreNameClick = { navController.navigate(Screen.SettingsEditStoreName.route) }
+            )
+        }
+        composable(Screen.SettingsEditStoreName.route) {
+            SettingsEditStoreNameScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.SettingsBankAccounts.route) {
+            SettingsBankAccountsScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }
