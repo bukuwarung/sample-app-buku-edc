@@ -32,7 +32,8 @@ import com.bukuwarung.edc.ui.theme.*
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
-    onNavigateToTransfer: () -> Unit
+    onNavigateToTransfer: () -> Unit,
+    onNavigateToBalanceCheck: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -45,6 +46,9 @@ fun HomeScreen(
                 }
                 HomeUiEvent.NavigateToTransfer -> {
                     onNavigateToTransfer()
+                }
+                HomeUiEvent.NavigateToBalanceCheck -> {
+                    onNavigateToBalanceCheck()
                 }
             }
         }
@@ -197,5 +201,9 @@ fun ActionItem(
 @Preview(showBackground = true, backgroundColor = Colors.PrimaryGreenColor)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(viewModel = HomeViewModel(), onNavigateToTransfer = {})
+    HomeScreen(
+        viewModel = HomeViewModel(),
+        onNavigateToTransfer = {},
+        onNavigateToBalanceCheck = {}
+    )
 }

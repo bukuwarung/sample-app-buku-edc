@@ -22,17 +22,17 @@
     {
       "name": "apply",
       "path": "commands/openspec/apply.md",
-      "mode": "auto"
+      "mode": "gemini-3-flash-preview"
     },
     {
       "name": "archive",
       "path": "commands/openspec/archive.md",
-      "mode": "auto"
+      "mode": "gemini-3-flash-preview"
     },
     {
       "name": "proposal",
       "path": "commands/openspec/proposal.md",
-      "mode": "auto"
+      "mode": "gpt-5.2"
     }
   ]
 }

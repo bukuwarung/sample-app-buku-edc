@@ -15,12 +15,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.ui.R
+import com.bukuwarung.edc.ui.common.FlowVariant
+import com.bukuwarung.edc.ui.common.transferInsertCardScreenTitle
 import com.bukuwarung.edc.ui.theme.Colors
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferInsertCardScreen(
+    variant: FlowVariant = FlowVariant.Transfer,
     onBack: () -> Unit,
     onCardDetected: () -> Unit
 ) {
@@ -34,7 +37,9 @@ fun TransferInsertCardScreen(
         containerColor = Colors.White,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.transfer_title)) },
+                title = { 
+                    Text(stringResource(variant.transferInsertCardScreenTitle))
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))

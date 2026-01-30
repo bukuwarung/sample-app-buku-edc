@@ -10,10 +10,10 @@ class HomeViewModel : ViewModel() {
     val uiEvents: SharedFlow<HomeUiEvent> = _uiEvents.asSharedFlow()
 
     fun onActionClick(action: HomeAction) {
-        if (action == HomeAction.Transfer) {
-            _uiEvents.tryEmit(HomeUiEvent.NavigateToTransfer)
-        } else {
-            _uiEvents.tryEmit(HomeUiEvent.ShowToast(action))
+        when (action) {
+            HomeAction.Transfer -> _uiEvents.tryEmit(HomeUiEvent.NavigateToTransfer)
+            HomeAction.CekSaldo -> _uiEvents.tryEmit(HomeUiEvent.NavigateToBalanceCheck)
+            else -> _uiEvents.tryEmit(HomeUiEvent.ShowToast(action))
         }
     }
 }
@@ -21,4 +21,5 @@ class HomeViewModel : ViewModel() {
 sealed interface HomeUiEvent {
     data class ShowToast(val action: HomeAction) : HomeUiEvent
     data object NavigateToTransfer : HomeUiEvent
+    data object NavigateToBalanceCheck : HomeUiEvent
 }

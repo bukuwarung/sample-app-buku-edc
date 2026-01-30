@@ -25,11 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.ui.R
+import com.bukuwarung.edc.ui.common.FlowVariant
+import com.bukuwarung.edc.ui.common.transferPinScreenTitle
 import com.bukuwarung.edc.ui.theme.Colors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferPinScreen(
+    variant: FlowVariant = FlowVariant.Transfer,
     viewModel: TransferPinViewModel,
     onBack: () -> Unit,
     onPinEntered: (String) -> Unit
@@ -40,7 +43,9 @@ fun TransferPinScreen(
         containerColor = Colors.White,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.transfer_masukkan_pin)) },
+                title = {
+                    Text(stringResource(variant.transferPinScreenTitle))
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))

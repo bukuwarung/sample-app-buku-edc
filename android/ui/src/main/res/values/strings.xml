@@ -50,4 +50,11 @@
     <string name="transfer_label_ref_no">Ref No.</string>
     <string name="transfer_label_transfer_berhasil">Transfer Berhasil</string>
     <string name="transfer_cetak_struk">Cetak Struk</string>
+
+    <string name="balance_check_title">Cek Saldo</string>
+    <string name="balance_check_summary">Informasi Saldo</string>
+    <string name="balance_check_lihat_detail">Lihat Detail Struk</string>
+    <string name="balance_check_saldo_tabungan">Saldo Tabungan</string>
+    <string name="balance_check_saldo_giro">Saldo Giro</string>
+    <string name="balance_check_label_saldo">Total Saldo</string>
 </resources>
