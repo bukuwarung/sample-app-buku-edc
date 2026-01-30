@@ -18,11 +18,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.ui.R
+import com.bukuwarung.edc.ui.common.FlowVariant
+import com.bukuwarung.edc.ui.common.transferSelectAccountScreenTitle
 import com.bukuwarung.edc.ui.theme.Colors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferSelectAccountScreen(
+    variant: FlowVariant = FlowVariant.Transfer,
     onBack: () -> Unit,
     onAccountSelected: (String) -> Unit
 ) {
@@ -30,7 +33,9 @@ fun TransferSelectAccountScreen(
         containerColor = Colors.White,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.transfer_title)) },
+                title = { 
+                    Text(stringResource(variant.transferSelectAccountScreenTitle))
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
@@ -106,5 +111,19 @@ fun AccountOption(
 @Preview(showBackground = true)
 @Composable
 fun TransferSelectAccountScreenPreview() {
-    TransferSelectAccountScreen(onBack = {}, onAccountSelected = {})
+    TransferSelectAccountScreen(
+        variant = FlowVariant.Transfer,
+        onBack = {},
+        onAccountSelected = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BalanceCheckSelectAccountScreenPreview() {
+    TransferSelectAccountScreen(
+        variant = FlowVariant.BalanceCheck,
+        onBack = {},
+        onAccountSelected = {}
+    )
 }

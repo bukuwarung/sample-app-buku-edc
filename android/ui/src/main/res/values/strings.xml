@@ -50,4 +50,44 @@
     <string name="transfer_label_ref_no">Ref No.</string>
     <string name="transfer_label_transfer_berhasil">Transfer Berhasil</string>
     <string name="transfer_cetak_struk">Cetak Struk</string>
+
+    <string name="balance_check_title">Cek Saldo</string>
+    <string name="balance_check_summary">Informasi Saldo</string>
+    <string name="balance_check_lihat_detail">Lihat Detail Struk</string>
+    <string name="balance_check_saldo_tabungan">Saldo Tabungan</string>
+    <string name="balance_check_saldo_giro">Saldo Giro</string>
+    <string name="balance_check_label_saldo">Total Saldo</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_section_profile">PROFIL ANDA</string>
+    <string name="settings_section_receipt">STRUK PEMBAYARAN</string>
+
+    <string name="settings_menu_account">Akun</string>
+    <string name="settings_menu_bank_accounts">Rekening Pencairan Tarik Tunai</string>
+    <string name="settings_menu_print_test">Tes Cetak Struk</string>
+    <string name="settings_menu_sound_effects">Atur Efek Suara</string>
+
+    <string name="settings_account_title">Akun</string>
+    <string name="settings_account_registered_phone">Nomor Telepon yang Terdaftar</string>
+    <string name="settings_account_device_serial">Nomor Seri Perangkat</string>
+    <string name="settings_account_terminal_id">ID Terminal</string>
+    <string name="settings_account_store_name">Nama Toko</string>
+    <string name="settings_account_store_address">Alamat Toko</string>
+
+    <string name="settings_edit_store_name_title">Ubah Nama Toko</string>
+    <string name="settings_edit_store_name_label">Nama Toko</string>
+    <string name="settings_edit_store_name_help">Nama toko ini akan muncul otomatis pada struk transaksi.</string>
+    <string name="settings_edit_store_address_label">Alamat Toko</string>
+
+    <string name="settings_bank_accounts_title">Rekening Anda</string>
+    <string name="settings_bank_accounts_description">Rekening utama akan digunakan sebagai rekening pencairan pembayaran dari pelanggan.</string>
+    <string name="settings_bank_accounts_primary_label">Rekening Pencairan</string>
+    <string name="settings_bank_accounts_edit_action">Edit Rekening</string>
+
+    <string name="settings_action_edit">Ubah</string>
+    <string name="settings_action_save">Simpan</string>
+
+    <string name="settings_toast_feature_unavailable">Fitur belum tersedia</string>
+    <string name="settings_toast_store_name_updated">Berhasil ubah nama toko</string>
 </resources>

@@ -1,14 +1,4 @@
-# home-mvvm Specification
-
-## Purpose
-TBD - created by archiving change scaffold-home-mvvm. Update Purpose after archive.
-## Requirements
-### Requirement: Delegate Home action clicks to view model
-The system SHALL route Home action item clicks to the Home view model with the action identifier or label.
-
-#### Scenario: User taps a Home action item
-- **WHEN** the user taps a Home action tile
-- **THEN** the Home view model receives the corresponding action identifier or label
+## MODIFIED Requirements
 
 ### Requirement: Show action-specific toast feedback
 
@@ -35,19 +25,7 @@ Transfer, Cek Saldo, and Pengaturan) based on a view model UI event.
 - **WHEN** the user taps the Pengaturan action tile
 - **THEN** no toast is shown for that action
 
-### Requirement: Navigate to Transfer flow from Home
-The system SHALL emit a navigation event from the Home view model when the Transfer action is tapped.
-
-#### Scenario: User taps Transfer action item
-- **WHEN** the user taps the Transfer action tile
-- **THEN** the UI receives a navigation event to open the Transfer flow
-
-### Requirement: Navigate to Balance Check flow from Home
-The system SHALL emit a navigation event from the Home view model when the Cek Saldo action is tapped.
-
-#### Scenario: User taps Cek Saldo action item
-- **WHEN** the user taps the Cek Saldo action tile
-- **THEN** the UI receives a navigation event to open the Balance Check flow
+## ADDED Requirements
 
 ### Requirement: Navigate to Settings flow from Home
 
@@ -58,4 +36,3 @@ tapped.
 
 - **WHEN** the user taps the Pengaturan action tile
 - **THEN** the UI receives a navigation event to open the Settings flow
-
