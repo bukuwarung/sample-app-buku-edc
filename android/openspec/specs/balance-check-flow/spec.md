@@ -1,4 +1,8 @@
-## ADDED Requirements
+# balance-check-flow Specification
+
+## Purpose
+TBD - created by archiving change add-balance-check-flow. Update Purpose after archive.
+## Requirements
 ### Requirement: Provide Balance Check flow screen sequence
 The system SHALL present the Balance Check flow screens in this order: Select Account, Insert/Swipe Card, Card Info, Enter PIN, Balance Summary, Receipt Preview.
 
@@ -31,3 +35,4 @@ The system SHALL provide a Hilt-injected ViewModel for each Balance Check screen
 #### Scenario: ViewModel injection
 - **WHEN** a Balance Check screen is composed
 - **THEN** the corresponding ViewModel is created via Hilt
+
