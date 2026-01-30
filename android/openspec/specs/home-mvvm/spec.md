@@ -11,18 +11,28 @@ The system SHALL route Home action item clicks to the Home view model with the a
 - **THEN** the Home view model receives the corresponding action identifier or label
 
 ### Requirement: Show action-specific toast feedback
-The system SHALL display a toast message for Home actions that do not trigger navigation (excluding Transfer and Cek Saldo) based on a view model UI event.
+
+The system SHALL display a toast message for Home actions that do not trigger navigation (excluding
+Transfer, Cek Saldo, and Pengaturan) based on a view model UI event.
 
 #### Scenario: View model emits toast event for non-navigation action
+
 - **WHEN** the Home view model emits a toast event for a non-navigation action
 - **THEN** the UI shows a toast containing that action’s label
 
 #### Scenario: Transfer action selected
+
 - **WHEN** the user taps the Transfer action tile
 - **THEN** no toast is shown for that action
 
 #### Scenario: Cek Saldo action selected
+
 - **WHEN** the user taps the Cek Saldo action tile
+- **THEN** no toast is shown for that action
+
+#### Scenario: Pengaturan action selected
+
+- **WHEN** the user taps the Pengaturan action tile
 - **THEN** no toast is shown for that action
 
 ### Requirement: Navigate to Transfer flow from Home
@@ -38,4 +48,14 @@ The system SHALL emit a navigation event from the Home view model when the Cek S
 #### Scenario: User taps Cek Saldo action item
 - **WHEN** the user taps the Cek Saldo action tile
 - **THEN** the UI receives a navigation event to open the Balance Check flow
+
+### Requirement: Navigate to Settings flow from Home
+
+The system SHALL emit a navigation event from the Home view model when the Pengaturan action is
+tapped.
+
+#### Scenario: User taps Pengaturan action item
+
+- **WHEN** the user taps the Pengaturan action tile
+- **THEN** the UI receives a navigation event to open the Settings flow
 
