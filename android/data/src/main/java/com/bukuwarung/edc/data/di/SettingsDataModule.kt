@@ -1,6 +1,6 @@
 package com.bukuwarung.edc.data.di
 
-import com.bukuwarung.edc.data.settings.FakeSettingsRepository
+import com.bukuwarung.edc.data.settings.DataStoreSettingsRepository
 import com.bukuwarung.edc.domain.settings.SettingsRepository
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class SettingsDataModule {
     @Binds
     @Singleton
-    abstract fun bindSettingsRepository(impl: FakeSettingsRepository): SettingsRepository
+    abstract fun bindSettingsRepository(impl: DataStoreSettingsRepository): SettingsRepository
 }

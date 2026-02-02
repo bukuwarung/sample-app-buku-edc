@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Sample Buku EDC</string>
+    <string name="shortcut_developer_settings_short">Dev Settings</string>
+    <string name="shortcut_developer_settings_long">Open Developer Settings</string>
 </resources>

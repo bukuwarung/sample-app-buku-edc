@@ -52,6 +52,7 @@ import com.bukuwarung.edc.domain.settings.BankAccount
 import com.bukuwarung.edc.domain.settings.GetBankAccountsUseCase
 import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.ui.theme.Colors
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun HomeScreen(
@@ -243,22 +244,25 @@ fun ActionItem(
 @Preview(showBackground = true, backgroundColor = Colors.PrimaryGreenColor)
 @Composable
 fun HomeScreenPreview() {
+    val mockRepository = object : SettingsRepository {
+        override suspend fun getAccountSettings(): AccountSettings {
+            throw NotImplementedError()
+        }
+
+        override suspend fun getBankAccounts(): List<BankAccount> {
+            return emptyList()
+        }
+
+        override fun isFirstTimeUser() = flowOf(true)
+        override suspend fun setIsFirstTimeUser(isFirstTime: Boolean) {}
+    }
+
     HomeScreen(
         viewModel = HomeViewModel(
             CheckCashWithdrawalEligibilityUseCase(
-                GetBankAccountsUseCase(
-                    object : SettingsRepository {
-                        override suspend fun getAccountSettings(): AccountSettings {
-                            throw NotImplementedError()
-                        }
-
-                        override suspend fun getBankAccounts(): List<BankAccount> {
-                            return emptyList()
-                        }
-                    }
-                )
+                GetBankAccountsUseCase(mockRepository)
             ),
-            CheckIsFirstTimeUserUseCase()
+            CheckIsFirstTimeUserUseCase(mockRepository)
         ),
         onNavigateToTransfer = {},
         onNavigateToBalanceCheck = {},

@@ -6,10 +6,13 @@ import com.bukuwarung.edc.domain.settings.DeviceInfo
 import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.domain.settings.StoreInfo
 import com.bukuwarung.edc.sdk.BukuEdcSdk
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class FakeSettingsRepository @Inject constructor() : SettingsRepository {
     override suspend fun getAccountSettings(): AccountSettings {
+        // ... (rest remains same)
         BukuEdcSdk.create()
         BukuEdcSdk.setDebugMode(true)
         return AccountSettings(
@@ -34,5 +37,13 @@ class FakeSettingsRepository @Inject constructor() : SettingsRepository {
                 isPrimaryPayoutAccount = true,
             ),
         )
+    }
+
+    override fun isFirstTimeUser(): Flow<Boolean> {
+        return flowOf(true)
+    }
+
+    override suspend fun setIsFirstTimeUser(isFirstTime: Boolean) {
+        // No-op for fake
     }
 }

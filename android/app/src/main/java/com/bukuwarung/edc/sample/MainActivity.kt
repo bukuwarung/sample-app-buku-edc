@@ -1,11 +1,13 @@
 package com.bukuwarung.edc.sample
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +21,8 @@ import com.bukuwarung.edc.ui.balance.BalanceCheckSummaryScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckViewModel
 import com.bukuwarung.edc.ui.cash.CashWithdrawalFirstTimeUserScreen
 import com.bukuwarung.edc.ui.common.FlowVariant
+import com.bukuwarung.edc.ui.developer.DeveloperSettingsScreen
+import com.bukuwarung.edc.ui.developer.DeveloperSettingsViewModel
 import com.bukuwarung.edc.ui.navigation.Screen
 import com.bukuwarung.edc.ui.settings.SettingsAccountScreen
 import com.bukuwarung.edc.ui.settings.SettingsBankAccountsScreen
@@ -49,7 +53,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SampleBukuEDCTheme(darkTheme = false) {
                 Surface(color = Colors.White) {
-                    MainNavigation()
+                    MainNavigation(intent = intent)
                 }
             }
         }
@@ -57,8 +61,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainNavigation() {
+fun MainNavigation(intent: Intent?) {
     val navController = rememberNavController()
+
+    LaunchedEffect(intent) {
+        if (intent?.action == "com.bukuwarung.edc.ACTION_DEVELOPER_SETTINGS") {
+            navController.navigate(Screen.DeveloperSettings.route)
+        }
+    }
+
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
             val viewModel: HomeViewModel = hiltViewModel()
@@ -337,6 +348,13 @@ fun MainNavigation() {
                 onClose = {
                     navController.popBackStack(Screen.Home.route, false)
                 }
+            )
+        }
+        composable(Screen.DeveloperSettings.route) {
+            val viewModel: DeveloperSettingsViewModel = hiltViewModel()
+            DeveloperSettingsScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
             )
         }
     }
