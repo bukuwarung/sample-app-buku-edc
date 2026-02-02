@@ -5,21 +5,38 @@ import com.bukuwarung.edc.ui.R
 
 enum class FlowVariant {
     Transfer,
-    BalanceCheck
+    BalanceCheck,
+    CashWithdrawal
 }
 
 val FlowVariant.transferSelectAccountScreenTitle: Int
     @StringRes
-    get() = if (this == FlowVariant.Transfer) R.string.transfer_title else R.string.balance_check_title
+    get() = when (this) {
+        FlowVariant.Transfer -> R.string.transfer_title
+        FlowVariant.BalanceCheck -> R.string.balance_check_title
+        FlowVariant.CashWithdrawal -> R.string.tarik_tunai_title
+    }
 
 val FlowVariant.transferInsertCardScreenTitle: Int
     @StringRes
-    get() = if (this == FlowVariant.Transfer) R.string.transfer_title else R.string.balance_check_title
+    get() = when (this) {
+        FlowVariant.Transfer -> R.string.transfer_title
+        FlowVariant.BalanceCheck -> R.string.balance_check_title
+        FlowVariant.CashWithdrawal -> R.string.tarik_tunai_title
+    }
 
 val FlowVariant.transferCardInfoScreenTitle: Int
     @StringRes
-    get() = if (this == FlowVariant.Transfer) R.string.transfer_title else R.string.balance_check_title
+    get() = when (this) {
+        FlowVariant.Transfer -> R.string.transfer_title
+        FlowVariant.BalanceCheck -> R.string.balance_check_title
+        FlowVariant.CashWithdrawal -> R.string.tarik_tunai_title
+    }
 
 val FlowVariant.transferPinScreenTitle: Int
     @StringRes
-    get() = if (this == FlowVariant.Transfer) R.string.transfer_masukkan_pin else R.string.transfer_masukkan_pin_atm
+    get() = when (this) {
+        FlowVariant.Transfer -> R.string.transfer_masukkan_pin
+        FlowVariant.BalanceCheck -> R.string.transfer_masukkan_pin_atm
+        FlowVariant.CashWithdrawal -> R.string.transfer_masukkan_pin_atm
+    }

@@ -13,9 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import com.bukuwarung.edc.sample.ui.theme.SampleBukuEDCTheme
 import com.bukuwarung.edc.ui.HomeScreen
 import com.bukuwarung.edc.ui.HomeViewModel
+import com.bukuwarung.edc.ui.activation.ActivationScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckReceiptScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckSummaryScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckViewModel
+import com.bukuwarung.edc.ui.cash.CashWithdrawalFirstTimeUserScreen
 import com.bukuwarung.edc.ui.common.FlowVariant
 import com.bukuwarung.edc.ui.navigation.Screen
 import com.bukuwarung.edc.ui.settings.SettingsAccountScreen
@@ -23,7 +25,20 @@ import com.bukuwarung.edc.ui.settings.SettingsBankAccountsScreen
 import com.bukuwarung.edc.ui.settings.SettingsEditStoreNameScreen
 import com.bukuwarung.edc.ui.settings.SettingsMenuScreen
 import com.bukuwarung.edc.ui.theme.Colors
-import com.bukuwarung.edc.ui.transfer.*
+import com.bukuwarung.edc.ui.transfer.TransferCardInfoScreen
+import com.bukuwarung.edc.ui.transfer.TransferCardInfoViewModel
+import com.bukuwarung.edc.ui.transfer.TransferConfirmScreen
+import com.bukuwarung.edc.ui.transfer.TransferConfirmViewModel
+import com.bukuwarung.edc.ui.transfer.TransferInsertCardScreen
+import com.bukuwarung.edc.ui.transfer.TransferPilihBankScreen
+import com.bukuwarung.edc.ui.transfer.TransferPilihBankViewModel
+import com.bukuwarung.edc.ui.transfer.TransferPinScreen
+import com.bukuwarung.edc.ui.transfer.TransferPinViewModel
+import com.bukuwarung.edc.ui.transfer.TransferRekeningTujuanScreen
+import com.bukuwarung.edc.ui.transfer.TransferRekeningTujuanViewModel
+import com.bukuwarung.edc.ui.transfer.TransferSelectAccountScreen
+import com.bukuwarung.edc.ui.transfer.TransferSuccessScreen
+import com.bukuwarung.edc.ui.transfer.TransferSuccessViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,6 +69,15 @@ fun MainNavigation() {
                 },
                 onNavigateToBalanceCheck = {
                     navController.navigate(Screen.BalanceCheckSelectAccount.route)
+                },
+                onNavigateToCashWithdrawal = {
+                    navController.navigate(Screen.CashWithdrawalSelectAccount.route)
+                },
+                onNavigateToFirstTimeUserPrompt = {
+                    navController.navigate(Screen.Activation.route)
+                },
+                onNavigateToAddBankAccount = {
+                    navController.navigate(Screen.SettingsBankAccounts.route)
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
@@ -229,6 +253,90 @@ fun MainNavigation() {
         composable(Screen.SettingsBankAccounts.route) {
             SettingsBankAccountsScreen(
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Cash Withdrawal Flow
+        composable(Screen.Activation.route) {
+            ActivationScreen(
+                onBack = { navController.popBackStack() },
+                onContinue = { phoneNumber ->
+                    navController.popBackStack()
+                    navController.navigate(Screen.CashWithdrawalFirstTimeUser.route)
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalFirstTimeUser.route) {
+            CashWithdrawalFirstTimeUserScreen(
+                onAddAccount = {
+                    navController.navigate(Screen.SettingsBankAccounts.route)
+                },
+                onLater = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalSelectAccount.route) {
+            TransferSelectAccountScreen(
+                variant = FlowVariant.CashWithdrawal,
+                onBack = { navController.popBackStack() },
+                onAccountSelected = {
+                    navController.navigate(Screen.CashWithdrawalInsertCard.route)
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalInsertCard.route) {
+            TransferInsertCardScreen(
+                variant = FlowVariant.CashWithdrawal,
+                onBack = { navController.popBackStack() },
+                onCardDetected = {
+                    navController.navigate(Screen.CashWithdrawalCardInfo.route)
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalCardInfo.route) {
+            val viewModel: TransferCardInfoViewModel = hiltViewModel()
+            TransferCardInfoScreen(
+                variant = FlowVariant.CashWithdrawal,
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onContinue = {
+                    navController.navigate(Screen.CashWithdrawalPin.route)
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalPin.route) {
+            val viewModel: TransferPinViewModel = hiltViewModel()
+            TransferPinScreen(
+                variant = FlowVariant.CashWithdrawal,
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onPinEntered = { pin ->
+                    navController.navigate(Screen.CashWithdrawalConfirm.route)
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalConfirm.route) {
+            val viewModel: TransferConfirmViewModel = hiltViewModel()
+            TransferConfirmScreen(
+                variant = FlowVariant.CashWithdrawal,
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onConfirm = {
+                    navController.navigate(Screen.CashWithdrawalSuccess.route)
+                },
+                onCancel = {
+                    navController.popBackStack(Screen.Home.route, false)
+                }
+            )
+        }
+        composable(Screen.CashWithdrawalSuccess.route) {
+            val viewModel: TransferSuccessViewModel = hiltViewModel()
+            TransferSuccessScreen(
+                viewModel = viewModel,
+                onClose = {
+                    navController.popBackStack(Screen.Home.route, false)
+                }
             )
         }
     }

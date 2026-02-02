@@ -90,4 +90,18 @@
 
     <string name="settings_toast_feature_unavailable">Fitur belum tersedia</string>
     <string name="settings_toast_store_name_updated">Berhasil ubah nama toko</string>
+
+    <!-- Cash Withdrawal -->
+    <string name="tarik_tunai_title">Tarik Tunai</string>
+    <string name="cash_withdrawal_first_time_title">Anda Belum Memiliki Rekening Tujuan</string>
+    <string name="cash_withdrawal_first_time_desc">Untuk menggunakan fitur Tarik Tunai, silakan tambahkan rekening sebagai tujuan transfer uang dari pelanggan.</string>
+    <string name="cash_withdrawal_add_account">Tambah Rekening</string>
+    <string name="cash_withdrawal_later">Nanti Saja</string>
+
+    <!-- Activation -->
+    <string name="activation_title">Masukkan Nomor HP</string>
+    <string name="activation_phone_label">Nomor HP</string>
+    <string name="activation_phone_placeholder">081234567890</string>
+    <string name="activation_phone_help">Masukkan nomor HP yang terdaftar</string>
+    <string name="activation_continue">Lanjut</string>
 </resources>
