@@ -24,4 +24,13 @@ sealed class Screen(val route: String) {
     data object SettingsAccount : Screen("settings_account")
     data object SettingsEditStoreName : Screen("settings_edit_store_name")
     data object SettingsBankAccounts : Screen("settings_bank_accounts")
+
+    // Cash Withdrawal Flow
+    data object CashWithdrawalFirstTimeUser : Screen("cash_withdrawal_first_time_user")
+    data object CashWithdrawalSelectAccount : Screen("cash_withdrawal_select_account")
+    data object CashWithdrawalInsertCard : Screen("cash_withdrawal_insert_card")
+    data object CashWithdrawalCardInfo : Screen("cash_withdrawal_card_info")
+    data object CashWithdrawalPin : Screen("cash_withdrawal_pin")
+    data object CashWithdrawalConfirm : Screen("cash_withdrawal_confirm")
+    data object CashWithdrawalSuccess : Screen("cash_withdrawal_success")
 }

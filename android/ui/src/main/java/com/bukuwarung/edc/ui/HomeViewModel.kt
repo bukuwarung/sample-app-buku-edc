@@ -1,14 +1,19 @@
 package com.bukuwarung.edc.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.bukuwarung.edc.domain.cash.CheckCashWithdrawalEligibilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val checkCashWithdrawalEligibilityUseCase: CheckCashWithdrawalEligibilityUseCase
+) : ViewModel() {
     private val _uiEvents = MutableSharedFlow<HomeUiEvent>(extraBufferCapacity = 1)
     val uiEvents: SharedFlow<HomeUiEvent> = _uiEvents.asSharedFlow()
 
@@ -16,6 +21,15 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         when (action) {
             HomeAction.Transfer -> _uiEvents.tryEmit(HomeUiEvent.NavigateToTransfer)
             HomeAction.CekSaldo -> _uiEvents.tryEmit(HomeUiEvent.NavigateToBalanceCheck)
+            HomeAction.TarikTunai -> {
+                viewModelScope.launch {
+                    if (checkCashWithdrawalEligibilityUseCase()) {
+                        _uiEvents.emit(HomeUiEvent.NavigateToCashWithdrawal)
+                    } else {
+                        _uiEvents.emit(HomeUiEvent.NavigateToCashWithdrawalFirstTime)
+                    }
+                }
+            }
             HomeAction.Pengaturan -> _uiEvents.tryEmit(HomeUiEvent.NavigateToSettings)
             else -> _uiEvents.tryEmit(HomeUiEvent.ShowToast(action))
         }
@@ -26,5 +40,7 @@ sealed interface HomeUiEvent {
     data class ShowToast(val action: HomeAction) : HomeUiEvent
     data object NavigateToTransfer : HomeUiEvent
     data object NavigateToBalanceCheck : HomeUiEvent
+    data object NavigateToCashWithdrawal : HomeUiEvent
+    data object NavigateToCashWithdrawalFirstTime : HomeUiEvent
     data object NavigateToSettings : HomeUiEvent
 }

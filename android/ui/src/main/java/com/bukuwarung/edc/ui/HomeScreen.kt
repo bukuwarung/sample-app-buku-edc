@@ -45,6 +45,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bukuwarung.edc.domain.cash.CheckCashWithdrawalEligibilityUseCase
+import com.bukuwarung.edc.domain.settings.AccountSettings
+import com.bukuwarung.edc.domain.settings.BankAccount
+import com.bukuwarung.edc.domain.settings.GetBankAccountsUseCase
+import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.ui.theme.Colors
 
 @Composable
@@ -53,6 +58,8 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onNavigateToTransfer: () -> Unit,
     onNavigateToBalanceCheck: () -> Unit,
+    onNavigateToCashWithdrawal: () -> Unit,
+    onNavigateToCashWithdrawalFirstTime: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     val context = LocalContext.current
@@ -69,6 +76,13 @@ fun HomeScreen(
                 }
                 HomeUiEvent.NavigateToBalanceCheck -> {
                     onNavigateToBalanceCheck()
+                }
+                HomeUiEvent.NavigateToCashWithdrawal -> {
+                    onNavigateToCashWithdrawal()
+                }
+
+                HomeUiEvent.NavigateToCashWithdrawalFirstTime -> {
+                    onNavigateToCashWithdrawalFirstTime()
                 }
                 HomeUiEvent.NavigateToSettings -> {
                     onNavigateToSettings()
@@ -225,9 +239,25 @@ fun ActionItem(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        viewModel = HomeViewModel(),
+        viewModel = HomeViewModel(
+            CheckCashWithdrawalEligibilityUseCase(
+                GetBankAccountsUseCase(
+                    object : SettingsRepository {
+                        override suspend fun getAccountSettings(): AccountSettings {
+                            throw NotImplementedError()
+                        }
+
+                        override suspend fun getBankAccounts(): List<BankAccount> {
+                            return emptyList()
+                        }
+                    }
+                )
+            )
+        ),
         onNavigateToTransfer = {},
         onNavigateToBalanceCheck = {},
+        onNavigateToCashWithdrawal = {},
+        onNavigateToCashWithdrawalFirstTime = {},
         onNavigateToSettings = {}
     )
 }
