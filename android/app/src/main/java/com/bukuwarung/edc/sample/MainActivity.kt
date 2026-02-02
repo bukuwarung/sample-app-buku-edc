@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.bukuwarung.edc.sample.ui.theme.SampleBukuEDCTheme
 import com.bukuwarung.edc.ui.HomeScreen
 import com.bukuwarung.edc.ui.HomeViewModel
+import com.bukuwarung.edc.ui.activation.ActivationScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckReceiptScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckSummaryScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckViewModel
@@ -72,8 +73,11 @@ fun MainNavigation() {
                 onNavigateToCashWithdrawal = {
                     navController.navigate(Screen.CashWithdrawalSelectAccount.route)
                 },
-                onNavigateToCashWithdrawalFirstTime = {
-                    navController.navigate(Screen.CashWithdrawalFirstTimeUser.route)
+                onNavigateToFirstTimeUserPrompt = {
+                    navController.navigate(Screen.Activation.route)
+                },
+                onNavigateToAddBankAccount = {
+                    navController.navigate(Screen.SettingsBankAccounts.route)
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
@@ -253,6 +257,15 @@ fun MainNavigation() {
         }
 
         // Cash Withdrawal Flow
+        composable(Screen.Activation.route) {
+            ActivationScreen(
+                onBack = { navController.popBackStack() },
+                onContinue = { phoneNumber ->
+                    navController.popBackStack()
+                    navController.navigate(Screen.CashWithdrawalFirstTimeUser.route)
+                }
+            )
+        }
         composable(Screen.CashWithdrawalFirstTimeUser.route) {
             CashWithdrawalFirstTimeUserScreen(
                 onAddAccount = {

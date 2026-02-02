@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.domain.cash.CheckCashWithdrawalEligibilityUseCase
+import com.bukuwarung.edc.domain.cash.CheckIsFirstTimeUserUseCase
 import com.bukuwarung.edc.domain.settings.AccountSettings
 import com.bukuwarung.edc.domain.settings.BankAccount
 import com.bukuwarung.edc.domain.settings.GetBankAccountsUseCase
@@ -59,7 +60,8 @@ fun HomeScreen(
     onNavigateToTransfer: () -> Unit,
     onNavigateToBalanceCheck: () -> Unit,
     onNavigateToCashWithdrawal: () -> Unit,
-    onNavigateToCashWithdrawalFirstTime: () -> Unit,
+    onNavigateToFirstTimeUserPrompt: () -> Unit,
+    onNavigateToAddBankAccount: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     val context = LocalContext.current
@@ -80,9 +82,12 @@ fun HomeScreen(
                 HomeUiEvent.NavigateToCashWithdrawal -> {
                     onNavigateToCashWithdrawal()
                 }
+                HomeUiEvent.NavigateToFirstTimeUserPrompt -> {
+                    onNavigateToFirstTimeUserPrompt()
+                }
 
-                HomeUiEvent.NavigateToCashWithdrawalFirstTime -> {
-                    onNavigateToCashWithdrawalFirstTime()
+                HomeUiEvent.NavigateToAddBankAccount -> {
+                    onNavigateToAddBankAccount()
                 }
                 HomeUiEvent.NavigateToSettings -> {
                     onNavigateToSettings()
@@ -252,12 +257,14 @@ fun HomeScreenPreview() {
                         }
                     }
                 )
-            )
+            ),
+            CheckIsFirstTimeUserUseCase()
         ),
         onNavigateToTransfer = {},
         onNavigateToBalanceCheck = {},
         onNavigateToCashWithdrawal = {},
-        onNavigateToCashWithdrawalFirstTime = {},
+        onNavigateToFirstTimeUserPrompt = {},
+        onNavigateToAddBankAccount = {},
         onNavigateToSettings = {}
     )
 }
