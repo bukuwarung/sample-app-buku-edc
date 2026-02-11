@@ -97,27 +97,61 @@
 - [ ] 8.2 Display UI prompt when incomplete transaction is found, allowing user to resume
 - [ ] 8.3 Add inline comments explaining incomplete transaction recovery for partners
 
-## 9. Error Handling and Documentation
+## 9. Error Handling
 
 - [ ] 9.1 Create `ErrorStateComposable.kt` reusable error UI component
 - [ ] 9.2 Add error handling examples to each flow demonstrating SDK error categories:
   - `DeviceSdkException` (E01 card read, E02 card removed, E06 PIN cancelled, E21 timeout)
   - `BackendException` (30 format error, 55 invalid PIN, 03 invalid merchant)
   - `TokenExpiredException` / `InvalidTokenException`
-- [ ] 9.3 Update README with SDK setup instructions for partners
-- [ ] 9.4 Add inline code comments at key integration points
-- [ ] 9.5 Document test credentials and environment configuration
 
-## 10. Validation and Testing
+## 10. Partner Integration Documentation
 
-- [ ] 10.1 Verify SDK initialization works on app startup
-- [ ] 10.2 Test Transfer flow with SDK (inquiry → token → posting)
-- [ ] 10.3 Test Balance Check flow with SDK
-- [ ] 10.4 Test Cash Withdrawal flow with SDK (transferInquiry with isCashWithdrawal=true)
-- [ ] 10.5 Test Transaction History retrieval, pagination, and display
-- [ ] 10.6 Test incomplete transaction detection and recovery
-- [ ] 10.7 Test error handling scenarios for each flow
-- [ ] 10.8 Build release APK and verify no ProGuard issues with SDK
+- [ ] 10.1 Create `README.md` at project root with:
+  - Prerequisites (Android API 21+, Kotlin 1.9+, Gradle setup)
+  - How to build and run the sample app
+  - Test credentials and environment configuration
+  - Link to `INTEGRATION_GUIDE.md`
+- [ ] 10.2 Create `INTEGRATION_GUIDE.md` at project root covering:
+  - **Overview**: What the sample app demonstrates and how to use it as reference
+  - **Architecture**: Clean Architecture pattern (data/domain/UI layers), how `AtmFeatures`
+    is wrapped by repositories, consumed by ViewModels
+  - **SDK Setup**: Step-by-step `BukuEdcConfig`, `BukuEdcSdk.initialize()`, Main Thread
+    requirement, `SdkLogListener` setup
+  - **Authentication**: Token provider `suspend () -> String`, 3-second timeout, connecting
+    to partner's auth service
+  - **Balance Check**: `getCardInfo()` → `checkBalance(accountId, sourceDetails, accountType)`,
+    reading `CardReceiptResponse` fields
+  - **Transfer**: Two-step `transferInquiry()` → save `transactionToken` →
+    `transferPosting()`, token 15-min expiry, `CardReceiptResponse` fields
+  - **Cash Withdrawal**: Same as transfer with `isCashWithdrawal = true`
+  - **Transaction History**: `getTransactionHistory(TransactionFilter)`, pagination via
+    `PaginationDetails`, `HistoryItem` fields
+  - **Incomplete Transactions**: `checkIncompleteTransactions()` on app start, recovery flow
+  - **Transaction Events**: Observing `transactionEvents: SharedFlow<TransactionEvent>`,
+    each event type and recommended UI handling
+  - **Error Handling**: Full reference of SDK exception types with error codes, descriptions,
+    and recommended handling strategies
+- [ ] 10.3 Add inline code comments at all key integration points:
+  - SDK initialization in `BukuEdcApplication`
+  - Token provider in `SdkModule`
+  - Each repository implementation (explaining SDK method, parameters, return type)
+  - ViewModel transaction flows (explaining inquiry → token → posting pattern)
+  - Event observation in UI (explaining each `TransactionEvent` subtype)
+  - Error mapping in repositories (explaining exception → domain error mapping)
+- [ ] 10.4 Review `INTEGRATION_GUIDE.md` against SDK contract in `SDK_USAGE_GUIDE.md`
+  to ensure consistency and accuracy
+
+## 11. Validation and Testing
+
+- [ ] 11.1 Verify SDK initialization works on app startup
+- [ ] 11.2 Test Transfer flow with SDK (inquiry → token → posting)
+- [ ] 11.3 Test Balance Check flow with SDK
+- [ ] 11.4 Test Cash Withdrawal flow with SDK (transferInquiry with isCashWithdrawal=true)
+- [ ] 11.5 Test Transaction History retrieval, pagination, and display
+- [ ] 11.6 Test incomplete transaction detection and recovery
+- [ ] 11.7 Test error handling scenarios for each flow
+- [ ] 11.8 Build release APK and verify no ProGuard issues with SDK
 
 ## Dependencies
 
@@ -127,4 +161,6 @@
 - Task 7 (History) can be parallelized after Task 1
 - Task 8 (Incomplete Transactions) depends on Task 2
 - Task 9 can begin after Task 1, completed after all flows integrated
-- Task 10 should be done incrementally as each flow is completed
+- Task 10 (Documentation) should be done after all flows integrated (Tasks 4-8),
+  so the guide reflects the actual implementation
+- Task 11 should be done incrementally as each flow is completed

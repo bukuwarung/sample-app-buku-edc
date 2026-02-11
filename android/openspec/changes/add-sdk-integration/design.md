@@ -124,9 +124,29 @@ bindings.
 
 **Why**: Consistent with existing Hilt setup (`DataStoreModule`, `SettingsDataModule`).
 
+### Decision 6: Dedicated Integration Guide for Partners
+
+**What**: Create `INTEGRATION_GUIDE.md` at the project root as the primary documentation for
+partner developers, plus `README.md` for project setup.
+
+**Why**: The sample app's primary purpose is to help partners integrate the SDK. Inline comments
+alone are insufficient — partners need a standalone document they can follow step-by-step
+without reading the full codebase. The guide complements the SDK's own `SDK_USAGE_GUIDE.md`
+by showing integration patterns in a real app context (Clean Architecture, Hilt DI, Compose UI).
+
+**Alternatives considered**:
+- Wiki / Confluence only: Rejected — documentation should live with the code it describes
+- Inline comments only: Rejected — doesn't provide a cohesive integration narrative
+- Copy SDK_USAGE_GUIDE.md: Rejected — different purpose; SDK guide is API reference, integration
+  guide shows patterns in the context of a real app architecture
+
 ## Module Responsibilities
 
 ```
+(root)
+├── README.md               # Build, run, prerequisites, test credentials
+└── INTEGRATION_GUIDE.md    # Full SDK integration guide for partners
+
 app/
 ├── BukuEdcApplication.kt  # SDK initialization with BukuEdcConfig
 └── MainActivity.kt        # Navigation including History
@@ -176,6 +196,6 @@ ui/
 3. **Phase 3**: Wire existing flows to new repositories (replace mock data)
 4. **Phase 4**: Add transaction history feature (new capability)
 5. **Phase 5**: Add incomplete transaction handling
-6. **Phase 6**: Update README and inline comments for partners
+6. **Phase 6**: Create `INTEGRATION_GUIDE.md`, `README.md`, and inline comments for partners
 
 **Rollback**: Can revert to mock data by swapping Hilt bindings if SDK issues arise.

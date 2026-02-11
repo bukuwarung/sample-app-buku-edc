@@ -29,12 +29,17 @@ should be built out with SDK integration (BUKU-12647 comment).
   real-time transaction progress (card detection, PIN entry, processing steps)
 - **Error Handling**: Add error handling patterns using SDK exception types (`SdkException`,
   `DeviceSdkException`, `BackendException`, `TokenExpiredException`, `InvalidTokenException`)
+- **Partner Integration Guide**: Create comprehensive `INTEGRATION_GUIDE.md` documenting the
+  full SDK integration journey (setup, auth, transaction flows, error handling, event monitoring,
+  architecture patterns) as the primary reference for partner developers
+- **README**: Create project `README.md` with build/run instructions and test credentials
 
 ## Impact
 
 - **Affected specs**: `transfer-flow`, `balance-check-flow`, `cash-withdrawal-flow`, `home-mvvm`
   (all will be MODIFIED to use SDK data instead of mocks)
-- **New specs**: `sdk-integration` (initialization, error handling), `transaction-history`
+- **New specs**: `sdk-integration` (initialization, error handling), `transaction-history`,
+  `partner-integration-guide` (documentation for partners)
 - **Affected code**:
   - `data/` module: New repositories, DI modules, direct `AtmFeatures` usage
   - `domain/` module: New repository interfaces, domain models
