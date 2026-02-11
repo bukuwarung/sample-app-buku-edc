@@ -1,22 +1,34 @@
 ## MODIFIED Requirements
 
-### Requirement: Use SDK data for Balance Check content
+### Requirement: Use mock data for Balance Check content
 
-The system SHALL populate Balance Check summary and receipt details using data retrieved from the SDK
-via domain use cases.
+The system SHALL populate Balance Check summary and receipt details using data retrieved from the
+SDK via domain use cases, replacing the previous mock data approach.
+
+#### Scenario: Card info retrieved via SDK
+
+- **WHEN** the user reaches the Informasi Kartu screen in Balance Check flow
+- **THEN** the card details (PAN, expiry date) are retrieved via `AtmFeatures.getCardInfo()`
+
+#### Scenario: Balance check execution via SDK
+
+- **WHEN** the user initiates a balance check after PIN entry
+- **THEN** the system calls `AtmFeatures.checkBalance()` with `accountId`,
+  `sourceDetails: BankDetails(bankCode, bankName)`, and `accountType`
 
 #### Scenario: Balance Summary shows SDK balance
 
-- **WHEN** the user reaches the Balance Summary screen
-- **THEN** the balance amount and timestamp are rendered from SDK response data
+- **WHEN** `checkBalance()` returns successfully
+- **THEN** the Balance Summary screen displays `CardReceiptResponse.totalAmount` as the balance
+  and `CardReceiptResponse.timestamp` as the inquiry time
 
 #### Scenario: Receipt Preview shows SDK details
 
 - **WHEN** the user views the Receipt Preview screen
-- **THEN** the receipt details are rendered from SDK response data
+- **THEN** the receipt displays `cardNumber`, `cardHolderName`, `bankName`, `rrn`, `totalAmount`,
+  and `accountType` from the `CardReceiptResponse`
 
-#### Scenario: Balance check execution via SDK
+#### Scenario: Balance check failure
 
-- **WHEN** the user initiates a balance check
-- **THEN** the system queries balance via SDK API
-- **AND THEN** displays the result or error based on SDK response
+- **WHEN** `checkBalance()` fails with a `DeviceSdkException` or `BackendException`
+- **THEN** the UI displays an error state with the mapped error message and retry option

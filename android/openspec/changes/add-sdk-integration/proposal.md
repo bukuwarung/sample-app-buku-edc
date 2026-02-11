@@ -9,32 +9,43 @@ should be built out with SDK integration (BUKU-12647 comment).
 
 ## What Changes
 
-- **SDK Initialization**: Add proper SDK initialization with test credentials in the Application
-  class
-- **Data Layer Repositories**: Create repository implementations in the `data` module that wrap SDK
-  calls (replacing the current mock-based `FakeSettingsRepository` pattern)
-- **Device Activation Flow**: Connect the existing `ActivationScreen` UI to the SDK's device
-  activation API
-- **Transaction Flows Integration**: Wire Transfer, Balance Check, and Cash Withdrawal flows to use
-  SDK transaction APIs instead of mock data
-- **Transaction History**: Add new feature to retrieve and display transaction history via SDK
-- **Bank Account Registration**: Connect first-time user flow to SDK's bank registration API
-- **Error Handling**: Add comprehensive error handling patterns demonstrating SDK error states to
-  partners
+- **SDK Initialization**: Add proper SDK initialization with `BukuEdcSdk.initialize()` in the
+  Application class, providing `BukuEdcConfig` with SDK key and environment
+- **Token Provider Setup**: Implement the `suspend () -> String` token provider required by
+  `AtmFeatures` for authenticated SDK operations
+- **Data Layer Repositories**: Create repository implementations in the `data` module that delegate
+  to `AtmFeatures` suspend functions (replacing the current mock-based patterns)
+- **Transfer Flow Integration**: Wire Transfer flow to use `getCardInfo()`, `transferInquiry()`, and
+  `transferPosting()` two-step transaction API
+- **Balance Check Flow Integration**: Wire Balance Check flow to use `getCardInfo()` and
+  `checkBalance()` API
+- **Cash Withdrawal Flow Integration**: Wire Cash Withdrawal flow to use `transferInquiry()` with
+  `isCashWithdrawal = true` and `transferPosting()` API
+- **Transaction History**: Add new feature using `getTransactionHistory()` with pagination support
+  via `TransactionFilter` and `PaginationDetails`
+- **Incomplete Transaction Handling**: Check for pending transactions on app start using
+  `checkIncompleteTransactions()`
+- **Transaction Event Monitoring**: Observe `transactionEvents: SharedFlow<TransactionEvent>` for
+  real-time transaction progress (card detection, PIN entry, processing steps)
+- **Error Handling**: Add error handling patterns using SDK exception types (`SdkException`,
+  `DeviceSdkException`, `BackendException`, `TokenExpiredException`, `InvalidTokenException`)
 
 ## Impact
 
-- **Affected specs**: `transfer-flow`, `balance-check-flow`, `cash-withdrawal-flow`, `settings-flow`,
-  `homepage-screen` (all will be MODIFIED to use SDK data instead of mocks)
+- **Affected specs**: `transfer-flow`, `balance-check-flow`, `cash-withdrawal-flow`, `home-mvvm`
+  (all will be MODIFIED to use SDK data instead of mocks)
 - **New specs**: `sdk-integration` (initialization, error handling), `transaction-history`
 - **Affected code**:
-  - `data/` module: New repositories, SDK wrappers, DI modules
-  - `domain/` module: New use cases, repository interfaces
-  - `app/` module: SDK initialization, navigation for history
-  - `ui/` module: History screen, error state UI components
+  - `data/` module: New repositories, DI modules, direct `AtmFeatures` usage
+  - `domain/` module: New repository interfaces, domain models
+  - `app/` module: SDK initialization in Application class, navigation for history
+  - `ui/` module: History screen, error state UI, transaction event observation
 
 ## Out of Scope
 
+- Device activation (not part of SDK API — handled externally by partner backend)
+- Bank account registration (not part of SDK API — handled externally by partner backend)
+- Bank list retrieval (SDK accepts `BankDetails` as input, does not provide a list)
 - White-labeling customization (Phase 2 per PRD)
 - Production-ready UI design refinements
 - Offline mode / caching strategies

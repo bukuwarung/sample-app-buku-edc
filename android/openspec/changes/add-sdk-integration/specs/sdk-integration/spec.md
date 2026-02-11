@@ -2,90 +2,137 @@
 
 ### Requirement: Initialize SDK on Application Start
 
-The system SHALL initialize the BukuEDC SDK in the Application class with test credentials before
-any SDK feature is used.
+The system SHALL initialize `BukuEdcSdk` in the Application class using `BukuEdcSdk.initialize()`
+with a `BukuEdcConfig` containing the SDK key, `BukuEdcEnv.SANDBOX` environment, and an optional
+`SdkLogListener`, before any SDK feature is used.
 
 #### Scenario: App cold start initializes SDK
 
 - **WHEN** the application process starts
-- **THEN** the SDK is initialized with test environment configuration
-- **AND THEN** SDK features become available for use
+- **THEN** `BukuEdcSdk.initialize(application, bukuEdcConfig)` is called from the Main Thread in
+  `Application.onCreate()`
+- **AND THEN** the `BukuEdcSdk` instance is stored for Hilt injection
 
 #### Scenario: SDK initialization failure
 
-- **WHEN** the application starts and SDK initialization fails
-- **THEN** the system logs the error for debugging
+- **WHEN** the application starts and `BukuEdcSdk.initialize()` throws an exception
+- **THEN** the system logs the error via `SdkLogListener`
 - **AND THEN** the app displays an error state indicating SDK unavailability
 
-### Requirement: Provide Device Activation via SDK
+### Requirement: Provide Token Provider for AtmFeatures
 
-The system SHALL use the SDK's device activation API to register the device with the provided phone
-number.
+The system SHALL provide a `suspend () -> String` token provider function when creating
+`AtmFeatures` via `BukuEdcSdk.getAtmFeatures()`. The token provider retrieves an access token
+for authenticated SDK operations and must complete within 3 seconds.
 
-#### Scenario: Successful device activation
+#### Scenario: AtmFeatures creation with token provider
 
-- **WHEN** the user enters a valid phone number on the Activation screen and taps "Lanjut"
-- **THEN** the system calls the SDK activation API
-- **AND THEN** the system navigates to the Home screen on success
+- **WHEN** the app creates an `AtmFeatures` instance
+- **THEN** it calls `sdk.getAtmFeatures { tokenProvider() }` with a suspend function that returns
+  an access token string
 
-#### Scenario: Device activation failure
+#### Scenario: Token provider timeout
 
-- **WHEN** the SDK activation API returns an error
-- **THEN** the system displays an error message describing the failure
-- **AND THEN** the user remains on the Activation screen to retry
+- **WHEN** the token provider takes longer than 3 seconds
+- **THEN** the SDK throws `TimeoutCancellationException`
 
-### Requirement: Provide Result Type for SDK Operations
+### Requirement: Map SDK Exceptions to Domain Error Types
 
-The system SHALL use a sealed `Result<T, E>` type in the domain layer to represent SDK operation
-outcomes, forcing callers to handle both success and error cases.
+The system SHALL map SDK exception types to a domain-friendly `SdkError` sealed class in the domain
+layer, categorizing errors for UI consumption without leaking SDK types.
 
-#### Scenario: Success result
+#### Scenario: Device error mapping
 
-- **WHEN** an SDK operation succeeds
-- **THEN** the repository returns `Result.Success` containing the response data
+- **WHEN** the SDK throws `DeviceSdkException` (codes: E01 card read, E02 card removed, E06 PIN
+  cancelled, E21 timeout, E99 unknown)
+- **THEN** the repository maps it to `SdkError.Device` with the error code and message
 
-#### Scenario: Error result
+#### Scenario: Backend error mapping
 
-- **WHEN** an SDK operation fails
-- **THEN** the repository returns `Result.Error` containing an error type and message
+- **WHEN** the SDK throws `BackendException` (codes: 30 format error, 55 invalid PIN, 03 invalid
+  merchant)
+- **THEN** the repository maps it to `SdkError.Backend` with the error code and message
 
-### Requirement: Categorize SDK Errors
+#### Scenario: Token expired error mapping
 
-The system SHALL categorize SDK errors into meaningful groups (Network, Authentication, Validation,
-Unknown) to simplify error handling for partner developers.
+- **WHEN** the SDK throws `TokenExpiredException`
+- **THEN** the repository maps it to `SdkError.TokenExpired`
 
-#### Scenario: Network error categorization
+#### Scenario: Invalid token error mapping
 
-- **WHEN** the SDK returns a network-related error
-- **THEN** the error is categorized as `SdkError.Network`
-
-#### Scenario: Authentication error categorization
-
-- **WHEN** the SDK returns an authentication or authorization error
-- **THEN** the error is categorized as `SdkError.Authentication`
-
-#### Scenario: Validation error categorization
-
-- **WHEN** the SDK returns a validation error (e.g., invalid input)
-- **THEN** the error is categorized as `SdkError.Validation` with field-specific details
+- **WHEN** the SDK throws `InvalidTokenException`
+- **THEN** the repository maps it to `SdkError.InvalidToken`
 
 ### Requirement: Provide Repository Implementations in Data Module
 
-The system SHALL implement repository interfaces in the `data` module that wrap SDK calls with
-coroutine support.
+The system SHALL implement repository interfaces in the `data` module that delegate to `AtmFeatures`
+suspend functions. Since the SDK is coroutine-native, repositories directly call `AtmFeatures`
+methods and map results — no callback wrapping is needed.
 
-#### Scenario: Repository delegates to SDK
+#### Scenario: Repository delegates to AtmFeatures
 
 - **WHEN** a use case invokes a repository method
-- **THEN** the repository implementation calls the corresponding SDK API
-- **AND THEN** the response is wrapped in the `Result` type
+- **THEN** the repository calls the corresponding `AtmFeatures` suspend function
+- **AND THEN** the `kotlin.Result<T>` response is returned, with SDK exceptions mapped to domain
+  error types on failure
 
 ### Requirement: Provide Hilt Module for SDK Dependencies
 
-The system SHALL provide a Hilt module in the `data` layer that binds SDK instance and repository
-implementations.
+The system SHALL provide a Hilt module in the `data` layer that provides the `BukuEdcSdk` singleton,
+`AtmFeatures` instance (with token provider), and all repository implementation bindings.
 
 #### Scenario: Repository injection
 
 - **WHEN** a use case or ViewModel requests a repository via Hilt
-- **THEN** the correct implementation is provided
+- **THEN** the correct implementation backed by `AtmFeatures` is provided
+
+### Requirement: Monitor Transaction Events via SDK
+
+The system SHALL observe `AtmFeatures.transactionEvents: SharedFlow<TransactionEvent>` to provide
+real-time transaction progress updates to the UI.
+
+#### Scenario: Card waiting event
+
+- **WHEN** the SDK emits `TransactionEvent.WaitingForCard`
+- **THEN** the UI shows a "waiting for card" state
+
+#### Scenario: Card detected event
+
+- **WHEN** the SDK emits `TransactionEvent.CardDetected(cardType)`
+- **THEN** the UI updates to show the detected card type
+
+#### Scenario: PIN entry event
+
+- **WHEN** the SDK emits `TransactionEvent.EnteringPin`
+- **THEN** the UI shows a PIN entry in-progress state
+
+#### Scenario: Processing event
+
+- **WHEN** the SDK emits `TransactionEvent.ProcessingTransaction(step)`
+- **THEN** the UI shows the current processing step
+
+#### Scenario: Transaction complete event
+
+- **WHEN** the SDK emits `TransactionEvent.TransactionComplete(result)`
+- **THEN** the UI navigates to the success screen with `CardReceiptResponse` data
+
+#### Scenario: Transaction failed event
+
+- **WHEN** the SDK emits `TransactionEvent.TransactionFailed(error, canRetry)`
+- **THEN** the UI shows an error state with retry option if `canRetry` is true
+
+### Requirement: Check Incomplete Transactions on App Start
+
+The system SHALL call `AtmFeatures.checkIncompleteTransactions()` when the app starts to detect
+any pending transactions that need to be completed.
+
+#### Scenario: Incomplete transaction found
+
+- **WHEN** the app starts and `checkIncompleteTransactions()` returns a non-null
+  `IncompleteTransaction`
+- **THEN** the UI prompts the user to resume the pending transaction
+
+#### Scenario: No incomplete transactions
+
+- **WHEN** the app starts and `checkIncompleteTransactions()` returns null
+- **THEN** the app proceeds normally without interruption
