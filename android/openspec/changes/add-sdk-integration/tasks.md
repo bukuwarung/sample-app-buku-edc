@@ -3,13 +3,12 @@
 ## 1. Foundation - SDK Initialization and Core Types
 
 - [ ] 1.1 Add SDK key to `BuildConfig` via `build.gradle.kts` (test environment)
-- [ ] 1.2 Initialize `BukuEdcSdk` in `BukuEdcApplication.onCreate()` with `BukuEdcConfig`
-  (sdkKey, `BukuEdcEnv.SANDBOX`, optional `SdkLogListener`)
-- [ ] 1.3 Create `SdkError` sealed class in `domain/common/` mapping SDK exceptions
-  (`DeviceSdkException`, `BackendException`, `TokenExpiredException`, `InvalidTokenException`)
-  to domain error categories
-- [ ] 1.4 Create `SdkModule.kt` Hilt module in `data/di/` providing `BukuEdcSdk` singleton and
-  `AtmFeatures` instance (with token provider)
+- [ ] 1.2 Create `SdkInitializer` wrapper class in `data/sdk/` that wraps
+  `BukuEdcSdk.initialize()` with `BukuEdcConfig` (sdkKey, `BukuEdcEnv.SANDBOX`, optional
+  `SdkLogListener`) and exposes the `BukuEdcSdk` instance
+- [ ] 1.3 Call `SdkInitializer.initialize()` from `BukuEdcApplication.onCreate()` on Main Thread
+- [ ] 1.4 Create `SdkModule.kt` Hilt module in `data/di/` providing `SdkInitializer` singleton,
+  `BukuEdcSdk` (via `SdkInitializer`), and `AtmFeatures` instance (with token provider)
 - [ ] 1.5 Implement token provider `suspend () -> String` function for `AtmFeatures`
   (placeholder returning test token; partners will replace with their auth service)
 - [ ] 1.6 Remove stub `SdkInteractor.kt` class
@@ -138,7 +137,7 @@
   - Each repository implementation (explaining SDK method, parameters, return type)
   - ViewModel transaction flows (explaining inquiry → token → posting pattern)
   - Event observation in UI (explaining each `TransactionEvent` subtype)
-  - Error mapping in repositories (explaining exception → domain error mapping)
+  - Error handling in ViewModels (explaining raw SDK exception handling patterns)
 - [ ] 10.4 Review `INTEGRATION_GUIDE.md` against SDK contract in `SDK_USAGE_GUIDE.md`
   to ensure consistency and accuracy
 

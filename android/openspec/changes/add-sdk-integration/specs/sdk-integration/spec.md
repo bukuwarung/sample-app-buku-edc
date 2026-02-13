@@ -1,17 +1,17 @@
 ## ADDED Requirements
 
-### Requirement: Initialize SDK on Application Start
+### Requirement: Initialize SDK via SdkInitializer Wrapper
 
-The system SHALL initialize `BukuEdcSdk` in the Application class using `BukuEdcSdk.initialize()`
-with a `BukuEdcConfig` containing the SDK key, `BukuEdcEnv.SANDBOX` environment, and an optional
-`SdkLogListener`, before any SDK feature is used.
+The system SHALL provide an `SdkInitializer` class in the `data` layer that wraps
+`BukuEdcSdk.initialize()` with a `BukuEdcConfig` containing the SDK key, `BukuEdcEnv.SANDBOX`
+environment, and an optional `SdkLogListener`. The Application class delegates to `SdkInitializer`
+instead of calling the SDK directly, enabling clean Hilt integration.
 
-#### Scenario: App cold start initializes SDK
+#### Scenario: App cold start initializes SDK via wrapper
 
 - **WHEN** the application process starts
-- **THEN** `BukuEdcSdk.initialize(application, bukuEdcConfig)` is called from the Main Thread in
-  `Application.onCreate()`
-- **AND THEN** the `BukuEdcSdk` instance is stored for Hilt injection
+- **THEN** `SdkInitializer.initialize()` is called from the Main Thread in `Application.onCreate()`
+- **AND THEN** the `SdkInitializer` provides the `BukuEdcSdk` instance for Hilt injection
 
 #### Scenario: SDK initialization failure
 
@@ -36,32 +36,38 @@ for authenticated SDK operations and must complete within 3 seconds.
 - **WHEN** the token provider takes longer than 3 seconds
 - **THEN** the SDK throws `TimeoutCancellationException`
 
-### Requirement: Map SDK Exceptions to Domain Error Types
+### Requirement: Use Raw SDK Exceptions for Error Handling
 
-The system SHALL map SDK exception types to a domain-friendly `SdkError` sealed class in the domain
-layer, categorizing errors for UI consumption without leaking SDK types.
+The system SHALL propagate SDK exception types directly via `kotlin.Result<T>` without mapping
+them to domain error types. ViewModels handle raw SDK exceptions (`DeviceSdkException`,
+`BackendException`, `TokenExpiredException`, `InvalidTokenException`) so partners can see exactly
+how to handle each exception in their own apps.
 
-#### Scenario: Device error mapping
+#### Scenario: Device error handling
 
-- **WHEN** the SDK throws `DeviceSdkException` (codes: E01 card read, E02 card removed, E06 PIN
-  cancelled, E21 timeout, E99 unknown)
-- **THEN** the repository maps it to `SdkError.Device` with the error code and message
+- **WHEN** an SDK operation fails with `DeviceSdkException` (codes: E01 card read, E02 card
+  removed, E06 PIN cancelled, E21 timeout, E99 unknown)
+- **THEN** the ViewModel catches `DeviceSdkException` and displays an error with the code
+  and message
 
-#### Scenario: Backend error mapping
+#### Scenario: Backend error handling
 
-- **WHEN** the SDK throws `BackendException` (codes: 30 format error, 55 invalid PIN, 03 invalid
-  merchant)
-- **THEN** the repository maps it to `SdkError.Backend` with the error code and message
+- **WHEN** an SDK operation fails with `BackendException` (codes: 30 format error, 55 invalid
+  PIN, 03 invalid merchant)
+- **THEN** the ViewModel catches `BackendException` and displays an error with the code
+  and message
 
-#### Scenario: Token expired error mapping
+#### Scenario: Token expired error handling
 
-- **WHEN** the SDK throws `TokenExpiredException`
-- **THEN** the repository maps it to `SdkError.TokenExpired`
+- **WHEN** `transferPosting()` fails with `TokenExpiredException`
+- **THEN** the ViewModel catches `TokenExpiredException` and prompts the user to re-do the
+  inquiry step
 
-#### Scenario: Invalid token error mapping
+#### Scenario: Invalid token error handling
 
-- **WHEN** the SDK throws `InvalidTokenException`
-- **THEN** the repository maps it to `SdkError.InvalidToken`
+- **WHEN** `transferPosting()` fails with `InvalidTokenException`
+- **THEN** the ViewModel catches `InvalidTokenException` and prompts the user to re-do the
+  inquiry step
 
 ### Requirement: Provide Repository Implementations in Data Module
 
@@ -73,13 +79,14 @@ methods and map results — no callback wrapping is needed.
 
 - **WHEN** a use case invokes a repository method
 - **THEN** the repository calls the corresponding `AtmFeatures` suspend function
-- **AND THEN** the `kotlin.Result<T>` response is returned, with SDK exceptions mapped to domain
-  error types on failure
+- **AND THEN** the `kotlin.Result<T>` response is returned directly, with raw SDK exceptions
+  preserved on failure for the ViewModel to handle
 
 ### Requirement: Provide Hilt Module for SDK Dependencies
 
-The system SHALL provide a Hilt module in the `data` layer that provides the `BukuEdcSdk` singleton,
-`AtmFeatures` instance (with token provider), and all repository implementation bindings.
+The system SHALL provide a Hilt module in the `data` layer that provides the `SdkInitializer`
+singleton, `BukuEdcSdk` instance (via `SdkInitializer`), `AtmFeatures` instance (with token
+provider), and all repository implementation bindings.
 
 #### Scenario: Repository injection
 

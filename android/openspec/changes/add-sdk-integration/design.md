@@ -91,31 +91,35 @@ wrapping or bridging is needed.
 - Callback wrapping with `suspendCancellableCoroutine`: Not needed — SDK is already suspend-based
 - RxJava: Rejected — adds unnecessary dependency, SDK is already coroutines-native
 
-### Decision 3: Map SDK Exceptions to Domain Error Types
+### Decision 3: Use Raw SDK Exceptions (No Domain Mapping)
 
-**What**: Catch SDK exception types in repository implementations and map them to domain-friendly
-sealed classes for UI consumption.
+**What**: Let SDK exception types (`DeviceSdkException`, `BackendException`,
+`TokenExpiredException`, `InvalidTokenException`) propagate directly to the UI layer via
+`kotlin.Result<T>`. ViewModels handle them with `when` blocks.
 
-**Why**: Provides type-safe error handling in the UI layer while keeping domain SDK-agnostic. SDK
-exceptions (`DeviceSdkException`, `BackendException`, `TokenExpiredException`,
-`InvalidTokenException`) can be mapped to categories meaningful to the UI (device error, server
-error, auth error, etc.).
-
-**Alternatives considered**:
-- Custom `Result<T, E>` sealed class: Rejected — SDK already returns `kotlin.Result<T>`, adding
-  a second result type increases complexity
-- Raw exception propagation: Rejected — leaks SDK types into domain/UI layers
-
-### Decision 4: SDK Initialization in Application Class
-
-**What**: Initialize SDK in `BukuEdcApplication.onCreate()` with test credentials.
-
-**Why**: SDK must be initialized before any feature usage. SDK documentation strongly recommends
-Main Thread initialization to capture all Activity lifecycle events (required for PIN input UI).
+**Why**: This is a sample app for partners. Partners need to see exactly which SDK exceptions
+exist and how to handle them directly — not an abstraction layer they'd have to unpack. Keeping
+raw exceptions makes the sample code a 1:1 reference for their own integration.
 
 **Alternatives considered**:
-- Lazy initialization on first use: Rejected—complicates first-use flows, may miss lifecycle events
-- Activity-level initialization: Rejected—too late, may miss early SDK events
+- Map to domain `SdkError` sealed class: Rejected — adds unnecessary indirection for a sample
+  app, hides the actual SDK exceptions partners need to learn
+- Custom `Result<T, E>` type: Rejected — SDK already returns `kotlin.Result<T>`
+
+### Decision 4: SDK Initialization via SdkInitializer Wrapper Class
+
+**What**: Create an `SdkInitializer` class in the `data` layer that wraps
+`BukuEdcSdk.initialize()` and provides the `BukuEdcSdk` instance. The Application class delegates
+to `SdkInitializer` instead of calling the SDK directly.
+
+**Why**: Cleanly integrates with Hilt — `SdkInitializer` can be provided as a singleton via
+`SdkModule`, and `BukuEdcSdk` / `AtmFeatures` instances are derived from it. Keeps the
+Application class thin and testable.
+
+**Alternatives considered**:
+- Direct initialization in Application class: Rejected — harder to integrate with Hilt cleanly,
+  couples Application to SDK directly
+- Lazy initialization on first use: Rejected — may miss lifecycle events
 
 ### Decision 5: Hilt Modules for SDK Dependencies
 
@@ -148,12 +152,14 @@ by showing integration patterns in a real app context (Clean Architecture, Hilt 
 └── INTEGRATION_GUIDE.md    # Full SDK integration guide for partners
 
 app/
-├── BukuEdcApplication.kt  # SDK initialization with BukuEdcConfig
+├── BukuEdcApplication.kt  # Delegates to SdkInitializer (injected via Hilt)
 └── MainActivity.kt        # Navigation including History
 
 data/
 ├── di/
-│   └── SdkModule.kt       # Hilt bindings: BukuEdcSdk, AtmFeatures, repositories
+│   └── SdkModule.kt       # Hilt bindings: SdkInitializer, BukuEdcSdk, AtmFeatures, repositories
+├── sdk/
+│   └── SdkInitializer.kt  # Wraps BukuEdcSdk.initialize(), provides SDK instance
 ├── transaction/
 │   ├── TransferRepositoryImpl.kt   # Delegates to transferInquiry + transferPosting
 │   ├── BalanceRepositoryImpl.kt    # Delegates to checkBalance
@@ -162,8 +168,6 @@ data/
     └── CardRepositoryImpl.kt       # Delegates to getCardInfo, checkIncompleteTransactions
 
 domain/
-├── common/
-│   └── SdkError.kt         # Sealed class mapping SDK exceptions to domain errors
 ├── transaction/
 │   ├── TransferRepository.kt
 │   ├── BalanceRepository.kt
@@ -187,11 +191,11 @@ ui/
 | SDK API changes break integration | Pin SDK version, document version compatibility |
 | Test credentials expire | Document credential refresh process in README |
 | Transaction token expiry (15 min) | Show clear UI feedback when token expires, prompt re-inquiry |
-| Complex error states overwhelm partners | Group errors into categories with clear examples |
+| Complex error states overwhelm partners | Document each SDK exception type with examples in guide |
 
 ## Migration Plan
 
-1. **Phase 1**: SDK initialization, Hilt module, error mapping types (non-breaking)
+1. **Phase 1**: SdkInitializer wrapper, Hilt module, SDK initialization (non-breaking)
 2. **Phase 2**: Card and transaction repositories (alongside existing mocks)
 3. **Phase 3**: Wire existing flows to new repositories (replace mock data)
 4. **Phase 4**: Add transaction history feature (new capability)
