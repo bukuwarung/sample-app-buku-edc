@@ -13,6 +13,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Backspace
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ fun TransferPinScreen(
     onPinEntered: (String) -> Unit
 ) {
     val pin by viewModel.pin.collectAsState()
+    val isPinPromptActive by viewModel.isPinPromptActive.collectAsState()
 
     Scaffold(
         containerColor = Colors.White,
@@ -83,6 +86,34 @@ fun TransferPinScreen(
                             Text(
                                 stringResource(R.string.transfer_pin_warning_desc),
                                 fontSize = 10.sp
+                            )
+                        }
+                    }
+                }
+
+                // SDK EnteringPin event indicator — shown when the physical keypad is active
+                AnimatedVisibility(visible = isPinPromptActive) {
+                    Surface(
+                        color = Color(0xFFE3F2FD),
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp,
+                                color = Colors.IconBlue
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                stringResource(R.string.transfer_sedang_memasukkan_pin),
+                                fontSize = 12.sp,
+                                color = Colors.IconBlue
                             )
                         }
                     }

@@ -4,7 +4,9 @@ import com.bukuwarung.edc.data.card.CardRepositoryImpl
 import com.bukuwarung.edc.data.sdk.AtmFeaturesFactory
 import com.bukuwarung.edc.data.sdk.AuthTokenProvider
 import com.bukuwarung.edc.data.sdk.SdkInitializer
+import com.bukuwarung.edc.data.transaction.TransactionEventRepositoryImpl
 import com.bukuwarung.edc.domain.transaction.CardRepository
+import com.bukuwarung.edc.domain.transaction.TransactionEventRepository
 import com.bukuwarung.edc.sdk.AtmFeatures
 import com.bukuwarung.edc.sdk.BukuEdcSdk
 import dagger.Module
@@ -61,6 +63,17 @@ object SdkModule {
     @Provides
     @Singleton
     fun provideCardRepository(impl: CardRepositoryImpl): CardRepository = impl
+
+    /**
+     * Provides the [TransactionEventRepository] backed by [TransactionEventRepositoryImpl].
+     *
+     * Partners: Inject [TransactionEventRepository] in ViewModels to observe real-time
+     * transaction events (WaitingForCard → CardDetected → EnteringPin → ProcessingTransaction
+     * → TransactionComplete/Failed) during active SDK operations.
+     */
+    @Provides
+    @Singleton
+    fun provideTransactionEventRepository(impl: TransactionEventRepositoryImpl): TransactionEventRepository = impl
 
     /**
      * Provides the [AuthTokenProvider] for SDK authentication.

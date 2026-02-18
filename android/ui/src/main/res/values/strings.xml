@@ -31,6 +31,10 @@
     <string name="transfer_cari_bank">Cari Bank</string>
     <string name="transfer_masukkan_atau_gesek">Masukkan atau Gesek Kartu</string>
     <string name="transfer_masukkan_atau_gesek_desc">Silakan masukkan atau gesek kartu ATM pada mesin EDC.</string>
+    <string name="transfer_kartu_terdeteksi">Kartu Terdeteksi</string>
+    <string name="transfer_sedang_memasukkan_pin">Memasukkan PIN…</string>
+    <string name="transfer_sedang_memproses">Sedang memproses transaksi…</string>
+    <string name="transfer_transaksi_gagal">Transaksi Gagal</string>
     <string name="transfer_informasi_kartu">Informasi Kartu</string>
     <string name="transfer_informasi_kartu_desc">Silakan periksa informasi kartu di bawah ini</string>
     <string name="transfer_nomor_kartu">Nomor Kartu</string>

@@ -25,12 +25,12 @@
 
 ## 3. Transaction Event Monitoring
 
-- [ ] 3.1 Create `TransactionEventRepository` interface in `domain/transaction/` exposing
+- [x] 3.1 Create `TransactionEventRepository` interface in `domain/transaction/` exposing
   `transactionEvents: SharedFlow<TransactionEvent>`
-- [ ] 3.2 Implement in `data/` delegating to `AtmFeatures.transactionEvents`
-- [ ] 3.3 Update Insert Card screens to observe `WaitingForCard`, `CardDetected` events
-- [ ] 3.4 Update PIN screens to observe `EnteringPin` event
-- [ ] 3.5 Update processing/confirmation screens to observe `ProcessingTransaction`,
+- [x] 3.2 Implement in `data/` delegating to `AtmFeatures.transactionEvents`
+- [x] 3.3 Update Insert Card screens to observe `WaitingForCard`, `CardDetected` events
+- [x] 3.4 Update PIN screens to observe `EnteringPin` event
+- [x] 3.5 Update processing/confirmation screens to observe `ProcessingTransaction`,
   `TransactionComplete`, `TransactionFailed` events
 
 ## 4. Transfer Flow SDK Integration

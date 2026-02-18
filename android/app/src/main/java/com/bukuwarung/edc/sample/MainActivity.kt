@@ -34,6 +34,7 @@ import com.bukuwarung.edc.ui.transfer.TransferCardInfoViewModel
 import com.bukuwarung.edc.ui.transfer.TransferConfirmScreen
 import com.bukuwarung.edc.ui.transfer.TransferConfirmViewModel
 import com.bukuwarung.edc.ui.transfer.TransferInsertCardScreen
+import com.bukuwarung.edc.ui.transfer.TransferInsertCardViewModel
 import com.bukuwarung.edc.ui.transfer.TransferPilihBankScreen
 import com.bukuwarung.edc.ui.transfer.TransferPilihBankViewModel
 import com.bukuwarung.edc.ui.transfer.TransferPinScreen
@@ -126,8 +127,10 @@ fun MainNavigation(intent: Intent?) {
             )
         }
         composable(Screen.TransferInsertCard.route) {
+            val viewModel: TransferInsertCardViewModel = hiltViewModel()
             TransferInsertCardScreen(
                 variant = FlowVariant.Transfer,
+                viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onCardDetected = {
                     navController.navigate(Screen.TransferCardInfo.route)
@@ -190,8 +193,10 @@ fun MainNavigation(intent: Intent?) {
             )
         }
         composable(Screen.BalanceCheckInsertCard.route) {
+            val viewModel: TransferInsertCardViewModel = hiltViewModel()
             TransferInsertCardScreen(
                 variant = FlowVariant.BalanceCheck,
+                viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onCardDetected = {
                     navController.navigate(Screen.BalanceCheckCardInfo.route)
@@ -297,8 +302,10 @@ fun MainNavigation(intent: Intent?) {
             )
         }
         composable(Screen.CashWithdrawalInsertCard.route) {
+            val viewModel: TransferInsertCardViewModel = hiltViewModel()
             TransferInsertCardScreen(
                 variant = FlowVariant.CashWithdrawal,
+                viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onCardDetected = {
                     navController.navigate(Screen.CashWithdrawalCardInfo.route)
