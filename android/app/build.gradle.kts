@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":ui"))
+    implementation("com.bukuwarung.edc.sdk:buku-edc-sdk:0.1.3-SNAPSHOT")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -81,11 +81,17 @@ fun MainNavigation() {
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
+                },
+                onNavigateToAtmTest = {
+                    navController.navigate(Screen.AtmTest.route)
                 }
             )
         }
+        composable(Screen.AtmTest.route) {
+            AtmTestScreen()
+        }
         composable(Screen.TransferSelectAccount.route) {
-            TransferSelectAccountScreen(
+TransferSelectAccountScreen(
                 variant = FlowVariant.Transfer,
                 onBack = { navController.popBackStack() },
                 onAccountSelected = {

@@ -34,4 +34,5 @@ sealed class Screen(val route: String) {
     data object CashWithdrawalConfirm : Screen("cash_withdrawal_confirm")
     data object CashWithdrawalSuccess : Screen("cash_withdrawal_success")
     data object Activation : Screen("activation")
+    data object AtmTest : Screen("atm_test")
 }

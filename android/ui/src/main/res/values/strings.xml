@@ -6,7 +6,8 @@
     <string name="home_action_tarik_tunai">Tarik Tunai</string>
     <string name="home_action_riwayat">Riwayat</string>
     <string name="home_action_pengaturan">Pengaturan</string>
-    <string name="content_description_bluetooth">Bluetooth</string>
+    <string name="home_action_atm_test">ATM Test</string>
+<string name="content_description_bluetooth">Bluetooth</string>
     <string name="content_description_print">Print</string>
     <string name="transfer_title">Transfer</string>
     <string name="transfer_pilih_akun">Pilih Akun</string>

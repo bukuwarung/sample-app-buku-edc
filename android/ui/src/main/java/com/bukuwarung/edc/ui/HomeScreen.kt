@@ -62,7 +62,8 @@ fun HomeScreen(
     onNavigateToCashWithdrawal: () -> Unit,
     onNavigateToFirstTimeUserPrompt: () -> Unit,
     onNavigateToAddBankAccount: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToAtmTest: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -91,6 +92,9 @@ fun HomeScreen(
                 }
                 HomeUiEvent.NavigateToSettings -> {
                     onNavigateToSettings()
+                }
+                HomeUiEvent.NavigateToAtmTest -> {
+                    onNavigateToAtmTest()
                 }
             }
         }
@@ -161,6 +165,7 @@ fun HomeScreen(
                     ActionItemData(HomeAction.CekSaldo, Icons.Default.CreditCard),
                     ActionItemData(HomeAction.TarikTunai, Icons.Default.FileDownload),
                     ActionItemData(HomeAction.Riwayat, Icons.AutoMirrored.Filled.Assignment),
+                    ActionItemData(HomeAction.AtmTest, Icons.Default.CreditCard),
                     ActionItemData(HomeAction.Pengaturan, Icons.Default.Settings)
                 )
 
@@ -195,6 +200,7 @@ enum class HomeAction(@StringRes val labelResId: Int) {
     CekSaldo(R.string.home_action_cek_saldo),
     TarikTunai(R.string.home_action_tarik_tunai),
     Riwayat(R.string.home_action_riwayat),
+    AtmTest(R.string.home_action_atm_test),
     Pengaturan(R.string.home_action_pengaturan)
 }
 
@@ -265,6 +271,7 @@ fun HomeScreenPreview() {
         onNavigateToCashWithdrawal = {},
         onNavigateToFirstTimeUserPrompt = {},
         onNavigateToAddBankAccount = {},
-        onNavigateToSettings = {}
+        onNavigateToSettings = {},
+        onNavigateToAtmTest = {}
     )
 }

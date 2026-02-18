@@ -51,6 +51,7 @@ class HomeViewModel @Inject constructor(
                 }
 
                 HomeAction.Pengaturan -> _uiEvents.emit(HomeUiEvent.NavigateToSettings)
+                HomeAction.AtmTest -> _uiEvents.emit(HomeUiEvent.NavigateToAtmTest)
                 else -> _uiEvents.emit(HomeUiEvent.ShowToast(action))
             }
         }
@@ -65,4 +66,5 @@ sealed interface HomeUiEvent {
     data object NavigateToFirstTimeUserPrompt : HomeUiEvent
     data object NavigateToAddBankAccount : HomeUiEvent
     data object NavigateToSettings : HomeUiEvent
+    data object NavigateToAtmTest : HomeUiEvent
 }

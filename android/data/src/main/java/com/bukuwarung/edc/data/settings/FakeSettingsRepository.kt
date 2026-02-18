@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 class FakeSettingsRepository @Inject constructor() : SettingsRepository {
     override suspend fun getAccountSettings(): AccountSettings {
-        BukuEdcSdk.create()
-        BukuEdcSdk.setDebugMode(true)
+        //BukuEdcSdk.create()
+        //BukuEdcSdk.setDebugMode(true)
         return AccountSettings(
             deviceInfo = DeviceInfo(
                 registeredPhoneNumber = "0813 1010 1111",
