@@ -51,19 +51,19 @@ class DeveloperSettingsViewModel @Inject constructor(
 
     fun setPhoneNumber(phoneNumber: String) {
         viewModelScope.launch {
-            settingsRepository.setPhoneNumber(phoneNumber)
+            settingsRepository.setPhoneNumber(phoneNumber.trim())
         }
     }
 
     fun setAccessToken(accessToken: String) {
         viewModelScope.launch {
-            settingsRepository.setAccessToken(accessToken)
+            settingsRepository.setAccessToken(accessToken.trim())
         }
     }
 
     fun setAccountId(accountId: String) {
         viewModelScope.launch {
-            settingsRepository.setAccountId(accountId)
+            settingsRepository.setAccountId(accountId.trim())
         }
     }
 }

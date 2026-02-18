@@ -97,7 +97,7 @@ class BalanceCheckViewModel @Inject constructor(
 
             // Partners: accountId is the merchant's account UUID, configured in Developer Settings.
             // In production, this would come from your auth/account service.
-            val accountId = settingsRepository.getAccountId().first()
+            val accountId = settingsRepository.getAccountId().first().trim()
                 .ifEmpty { "no-account-id-configured" }
 
             balanceRepository.checkBalance(
