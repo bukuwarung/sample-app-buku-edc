@@ -253,7 +253,7 @@ fun HomeScreenPreview() {
             return emptyList()
         }
 
-        override fun isFirstTimeUser() = flowOf(true)
+        override fun isFirstTimeUser() = flowOf(false)
         override suspend fun setIsFirstTimeUser(isFirstTime: Boolean) {}
         override fun getPhoneNumber() = flowOf("")
         override suspend fun setPhoneNumber(phoneNumber: String) {}

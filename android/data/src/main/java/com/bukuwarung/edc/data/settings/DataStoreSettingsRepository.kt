@@ -45,7 +45,7 @@ class DataStoreSettingsRepository @Inject constructor(
                 }
             }
             .map { preferences ->
-                preferences[PreferencesKeys.IS_FIRST_TIME_USER] ?: true
+                preferences[PreferencesKeys.IS_FIRST_TIME_USER] ?: false
             }
     }
 

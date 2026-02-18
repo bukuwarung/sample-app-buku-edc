@@ -19,7 +19,7 @@ class DeveloperSettingsViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = true
+            initialValue = false
         )
 
     val phoneNumber: StateFlow<String> = settingsRepository.getPhoneNumber()
