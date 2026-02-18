@@ -338,10 +338,18 @@ fun MainNavigation(
             )
         }
         composable(Screen.CashWithdrawalSelectAccount.route) {
+            // Partners: Cash withdrawal reuses the same TransferFlowStateHolder and
+            // TransferRepository as the transfer flow. The key difference is setting
+            // isCashWithdrawal = true, which is passed to AtmFeatures.transferInquiry().
             TransferSelectAccountScreen(
                 variant = FlowVariant.CashWithdrawal,
                 onBack = { navController.popBackStack() },
-                onAccountSelected = {
+                onAccountSelected = { accountType ->
+                    // Partners: Clear previous state and mark this as a cash withdrawal flow.
+                    // The SDK reuses the transfer API with isCashWithdrawal = true.
+                    transferFlowState.clear()
+                    transferFlowState.isCashWithdrawal = true
+                    transferFlowState.accountType = if (accountType == "GIRO") "CHECKING" else "SAVINGS"
                     navController.navigate(Screen.CashWithdrawalInsertCard.route)
                 }
             )

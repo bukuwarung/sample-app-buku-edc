@@ -5,12 +5,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Shared state holder for the transfer flow, accumulating user input across screens.
+ * Shared state holder for the transfer and cash withdrawal flows, accumulating user input
+ * across screens.
  *
  * Partners: Because each screen in the Navigation graph creates its own ViewModel
  * (via `hiltViewModel()`), transfer parameters entered on earlier screens need to be
  * accessible on later screens (e.g. the Confirm screen needs the bank, amount, etc.
  * entered on the Rekening Tujuan screen). This singleton bridges that gap.
+ *
+ * **Cash Withdrawal**: The same state holder is reused for cash withdrawals because the
+ * SDK uses the same `transferInquiry()` / `transferPosting()` API with
+ * `isCashWithdrawal = true`. See [isCashWithdrawal].
  *
  * Call [clear] when the flow completes or the user navigates away to reset state.
  */
@@ -19,6 +24,15 @@ class TransferFlowStateHolder @Inject constructor() {
 
     /** Account type selected on the Select Account screen ("TABUNGAN" or "GIRO"). */
     var accountType: String = ""
+
+    /**
+     * Whether this flow is a cash withdrawal (Tarik Tunai) rather than a transfer.
+     *
+     * Partners: Cash withdrawal uses the same SDK transfer API — the only difference is
+     * passing `isCashWithdrawal = true` to `AtmFeatures.transferInquiry()`. This flag is
+     * read by [TransferConfirmViewModel] when performing the inquiry call.
+     */
+    var isCashWithdrawal: Boolean = false
 
     /** Destination bank name selected on the Pilih Bank screen. */
     var bankName: String = ""
@@ -58,6 +72,7 @@ class TransferFlowStateHolder @Inject constructor() {
     /** Resets all state — call when the flow completes or the user cancels. */
     fun clear() {
         accountType = ""
+        isCashWithdrawal = false
         bankName = ""
         bankCode = ""
         accountNumber = ""

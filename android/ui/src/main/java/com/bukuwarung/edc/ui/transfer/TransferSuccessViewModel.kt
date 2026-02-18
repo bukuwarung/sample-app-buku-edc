@@ -9,13 +9,15 @@ import java.util.Locale
 import javax.inject.Inject
 
 /**
- * ViewModel for the Transfer Success screen.
+ * ViewModel for the Transfer / Cash Withdrawal Success screen.
  *
  * Partners: This ViewModel reads the posting receipt from [TransferFlowStateHolder],
  * which was populated by [TransferConfirmViewModel] after a successful
  * `AtmFeatures.transferPosting()` call. The receipt contains the final transaction
  * details: amount, admin fee, total, RRN, approval code, and status.
  *
+ * The same ViewModel and screen are reused for cash withdrawals — the SDK returns
+ * the same `CardReceiptResponse` format for both transfers and withdrawals.
  * The success screen displays these fields as a transaction receipt for the customer.
  */
 @HiltViewModel
@@ -24,6 +26,9 @@ class TransferSuccessViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val receipt = flowState.postingReceipt
+
+    /** Whether this receipt is for a cash withdrawal (Tarik Tunai) rather than a transfer. */
+    val isCashWithdrawal: Boolean = flowState.isCashWithdrawal
 
     /** Formatted total transfer amount (e.g. "Rp1.000.000"). */
     val totalAmount: String = receipt?.let { formatRupiah(it.totalAmount) } ?: "-"

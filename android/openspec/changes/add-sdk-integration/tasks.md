@@ -64,13 +64,13 @@
 
 ## 6. Cash Withdrawal Flow SDK Integration
 
-- [ ] 6.1 Update Cash Withdrawal ViewModels to call `transferInquiry()` with
+- [x] 6.1 Update Cash Withdrawal ViewModels to call `transferInquiry()` with
   `isCashWithdrawal = true` (SDK reuses transfer API for withdrawals)
-- [ ] 6.2 Save `transactionToken` from inquiry response for posting step
-- [ ] 6.3 Update withdrawal confirmation to call `transferPosting()` with saved token
-- [ ] 6.4 Display `CardReceiptResponse` data on withdrawal success/receipt screens
-- [ ] 6.5 Add error handling UI states for Cash Withdrawal screens
-- [ ] 6.6 Add inline comments explaining that withdrawal uses transfer API with
+- [x] 6.2 Save `transactionToken` from inquiry response for posting step
+- [x] 6.3 Update withdrawal confirmation to call `transferPosting()` with saved token
+- [x] 6.4 Display `CardReceiptResponse` data on withdrawal success/receipt screens
+- [x] 6.5 Add error handling UI states for Cash Withdrawal screens
+- [x] 6.6 Add inline comments explaining that withdrawal uses transfer API with
   `isCashWithdrawal = true`
 
 ## 7. Transaction History Feature

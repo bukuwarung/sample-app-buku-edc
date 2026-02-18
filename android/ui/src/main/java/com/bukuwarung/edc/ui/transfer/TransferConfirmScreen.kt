@@ -133,9 +133,11 @@ fun TransferConfirmScreen(
                             .fillMaxSize()
                             .padding(16.dp)
                     ) {
+                        // Partners: The transaction type label ("Transfer" or "Tarik Tunai")
+                        // is determined by the ViewModel based on flowState.isCashWithdrawal.
                         ConfirmRow(
                             stringResource(R.string.transfer_tipe_transaksi),
-                            if (variant == FlowVariant.CashWithdrawal) "Tarik Tunai" else state.type
+                            state.type
                         )
                         ConfirmRow(stringResource(R.string.transfer_bank_tujuan), state.bankName)
                         ConfirmRow(stringResource(R.string.transfer_rekening_tujuan), state.accountNo)

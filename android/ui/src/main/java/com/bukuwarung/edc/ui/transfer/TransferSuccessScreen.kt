@@ -41,11 +41,15 @@ import com.bukuwarung.edc.ui.R
 import com.bukuwarung.edc.ui.theme.Colors
 
 /**
- * Success screen showing the completed transfer receipt.
+ * Success screen showing the completed transfer or cash withdrawal receipt.
  *
  * Partners: All data displayed here comes from the SDK's CardReceiptResponse
  * returned by `AtmFeatures.transferPosting()`, mapped through [TransferSuccessViewModel].
  * Key receipt fields: totalAmount, amount, adminFee, rrn, approvalCode, status, timestamp.
+ *
+ * This screen is reused for both transfers and cash withdrawals — the SDK returns
+ * the same CardReceiptResponse format for both since withdrawals use the transfer API
+ * with `isCashWithdrawal = true`.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

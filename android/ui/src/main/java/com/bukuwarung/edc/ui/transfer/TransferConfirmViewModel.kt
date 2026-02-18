@@ -23,9 +23,12 @@ import java.util.Locale
 import javax.inject.Inject
 
 /**
- * ViewModel for the Confirm screen — orchestrates the two-step transfer flow.
+ * ViewModel for the Confirm screen — orchestrates the two-step transfer/withdrawal flow.
  *
- * Partners: This ViewModel demonstrates the core SDK transfer pattern:
+ * Partners: This ViewModel demonstrates the core SDK transfer pattern, which is also
+ * reused for cash withdrawals. The SDK uses the same `transferInquiry()` / `transferPosting()`
+ * API for both — the only difference is passing `isCashWithdrawal = true` for withdrawals.
+ * See [TransferFlowStateHolder.isCashWithdrawal].
  *
  * 1. **On initialization** — calls [TransferRepository.transferInquiry] with the transfer
  *    details accumulated in [TransferFlowStateHolder]. The inquiry returns fee information
@@ -131,10 +134,13 @@ class TransferConfirmViewModel @Inject constructor(
     }
 
     // ——————————————————————————————————————————————————————————————
-    // Step 1: Transfer Inquiry
+    // Step 1: Transfer / Withdrawal Inquiry
     // Partners: The inquiry is called automatically when the Confirm screen opens.
     // On success, the response populates the confirmation UI with fee breakdown.
     // The transactionToken is saved in flowState.inquiryReceipt for the posting step.
+    //
+    // For cash withdrawals, the same transferInquiry() API is called with
+    // isCashWithdrawal = true. The SDK handles the difference internally.
     // ——————————————————————————————————————————————————————————————
 
     private fun performInquiry() {
@@ -146,13 +152,16 @@ class TransferConfirmViewModel @Inject constructor(
             val amountBigInt = flowState.amount.filter { it.isDigit() }
                 .toBigIntegerOrNull() ?: BigInteger.ZERO
 
+            // Partners: Cash withdrawal uses the same transferInquiry() API with
+            // isCashWithdrawal = true. The flag is set in TransferFlowStateHolder
+            // when the user enters the cash withdrawal flow.
             transferRepository.transferInquiry(
                 accountId = flowState.accountNumber,
                 amount = amountBigInt,
                 bankCode = flowState.bankCode,
                 bankName = flowState.bankName,
                 notes = flowState.notes,
-                isCashWithdrawal = false,
+                isCashWithdrawal = flowState.isCashWithdrawal,
                 accountType = flowState.accountType
             ).onSuccess { receipt ->
                 // Partners: Save the inquiry receipt — its transactionToken is needed
@@ -160,7 +169,7 @@ class TransferConfirmViewModel @Inject constructor(
                 flowState.inquiryReceipt = receipt
 
                 _uiState.value = ConfirmUiState.InquirySuccess(
-                    type = "Transfer",
+                    type = if (flowState.isCashWithdrawal) "Tarik Tunai" else "Transfer",
                     bankName = receipt.bankName.ifEmpty { flowState.bankName },
                     accountNo = flowState.accountNumber,
                     accountName = receipt.cardHolderName,
@@ -179,10 +188,12 @@ class TransferConfirmViewModel @Inject constructor(
     }
 
     // ——————————————————————————————————————————————————————————————
-    // Step 2: Transfer Posting
-    // Partners: This is triggered when the user taps the "Transfer" button on the
-    // confirmation screen. The single-use transactionToken from the inquiry step is
-    // sent to the SDK to execute the actual fund transfer.
+    // Step 2: Transfer / Withdrawal Posting
+    // Partners: This is triggered when the user taps the "Transfer" or "Tarik Tunai"
+    // button on the confirmation screen. The single-use transactionToken from the
+    // inquiry step is sent to the SDK to execute the actual fund transfer or withdrawal.
+    // The same transferPosting() API is used for both — no isCashWithdrawal flag needed
+    // at the posting step; the token already encodes the transaction type.
     //
     // If the token has expired (>15 min since inquiry), the SDK throws
     // TokenExpiredException and the user must navigate back to redo the inquiry.
@@ -258,22 +269,28 @@ class TransferConfirmViewModel @Inject constructor(
      *
      * Partners: The SDK throws specific exception types for different failure modes.
      * Handle each type to provide actionable guidance to the user:
-     * - [TokenExpiredException] → prompt user to restart the transfer
-     * - [InvalidTokenException] → prompt user to restart the transfer
+     * - [TokenExpiredException] → prompt user to restart the transfer/withdrawal
+     * - [InvalidTokenException] → prompt user to restart the transfer/withdrawal
      * - [DeviceSdkException] → device/hardware issue (card read error, PIN cancelled, etc.)
      * - [BackendException] → backend processing error (invalid PIN, format error, etc.)
+     *
+     * The same error types apply to both transfers and cash withdrawals since
+     * the SDK uses the same API for both.
      */
-    private fun getErrorMessage(error: Throwable): String = when (error) {
-        is TokenExpiredException ->
-            "Token transaksi sudah kedaluwarsa. Silakan ulangi proses transfer."
-        is InvalidTokenException ->
-            "Token transaksi tidak valid. Silakan ulangi proses transfer."
-        is DeviceSdkException ->
-            "Kesalahan perangkat (${error.code}): ${error.message}"
-        is BackendException ->
-            "Kesalahan server (${error.code}): ${error.message}"
-        else ->
-            error.message ?: "Terjadi kesalahan. Silakan coba lagi."
+    private fun getErrorMessage(error: Throwable): String {
+        val flowName = if (flowState.isCashWithdrawal) "tarik tunai" else "transfer"
+        return when (error) {
+            is TokenExpiredException ->
+                "Token transaksi sudah kedaluwarsa. Silakan ulangi proses $flowName."
+            is InvalidTokenException ->
+                "Token transaksi tidak valid. Silakan ulangi proses $flowName."
+            is DeviceSdkException ->
+                "Kesalahan perangkat (${error.code}): ${error.message}"
+            is BackendException ->
+                "Kesalahan server (${error.code}): ${error.message}"
+            else ->
+                error.message ?: "Terjadi kesalahan. Silakan coba lagi."
+        }
     }
 
     private fun formatRupiah(amount: BigInteger): String {
