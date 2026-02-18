@@ -259,6 +259,8 @@ fun HomeScreenPreview() {
         override suspend fun setPhoneNumber(phoneNumber: String) {}
         override fun getAccessToken() = flowOf("")
         override suspend fun setAccessToken(accessToken: String) {}
+        override fun getAccountId() = flowOf("")
+        override suspend fun setAccountId(accountId: String) {}
     }
 
     HomeScreen(

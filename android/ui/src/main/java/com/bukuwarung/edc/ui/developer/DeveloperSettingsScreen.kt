@@ -48,9 +48,11 @@ fun DeveloperSettingsScreen(
     val isFirstTimeUser by viewModel.isFirstTimeUser.collectAsState()
     val savedPhoneNumber by viewModel.phoneNumber.collectAsState()
     val savedAccessToken by viewModel.accessToken.collectAsState()
+    val savedAccountId by viewModel.accountId.collectAsState()
 
     var phoneNumberInput by remember(savedPhoneNumber) { mutableStateOf(savedPhoneNumber) }
     var accessTokenInput by remember(savedAccessToken) { mutableStateOf(savedAccessToken) }
+    var accountIdInput by remember(savedAccountId) { mutableStateOf(savedAccountId) }
     var tokenSaved by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -95,6 +97,29 @@ fun DeveloperSettingsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 OutlinedTextField(
+                    value = accountIdInput,
+                    onValueChange = {
+                        accountIdInput = it
+                        tokenSaved = false
+                    },
+                    label = { Text("Account ID (UUID)") },
+                    placeholder = { Text("e.g. 5252d46d-346a-4e67-a9b7-3ab63a8e4a72") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Merchant account UUID used as accountId in checkBalance() and transferInquiry().",
+                    fontSize = 11.sp,
+                    color = Colors.TextGray,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
                     value = accessTokenInput,
                     onValueChange = {
                         accessTokenInput = it
@@ -131,6 +156,7 @@ fun DeveloperSettingsScreen(
                 Button(
                     onClick = {
                         viewModel.setPhoneNumber(phoneNumberInput)
+                        viewModel.setAccountId(accountIdInput)
                         viewModel.setAccessToken(accessTokenInput)
                         tokenSaved = true
                     },

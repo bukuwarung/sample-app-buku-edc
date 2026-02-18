@@ -24,6 +24,7 @@ class DataStoreSettingsRepository @Inject constructor(
         val IS_FIRST_TIME_USER = booleanPreferencesKey("is_first_time_user")
         val PHONE_NUMBER = stringPreferencesKey("phone_number")
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val ACCOUNT_ID = stringPreferencesKey("account_id")
     }
 
     override suspend fun getAccountSettings(): AccountSettings {
@@ -91,6 +92,26 @@ class DataStoreSettingsRepository @Inject constructor(
     override suspend fun setAccessToken(accessToken: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.ACCESS_TOKEN] = accessToken
+        }
+    }
+
+    override fun getAccountId(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[PreferencesKeys.ACCOUNT_ID] ?: ""
+            }
+    }
+
+    override suspend fun setAccountId(accountId: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.ACCOUNT_ID] = accountId
         }
     }
 }

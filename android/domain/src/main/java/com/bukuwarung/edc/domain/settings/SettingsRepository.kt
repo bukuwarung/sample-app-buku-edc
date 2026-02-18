@@ -26,4 +26,15 @@ interface SettingsRepository {
 
     /** Persists the access token for SDK authentication. */
     suspend fun setAccessToken(accessToken: String)
+
+    /**
+     * Returns the stored merchant account ID (UUID), or empty string if not set.
+     *
+     * Partners: This is the merchant's account UUID used as the `accountId` parameter
+     * in SDK calls like `checkBalance()` and `transferInquiry()`.
+     */
+    fun getAccountId(): Flow<String>
+
+    /** Persists the merchant account ID for SDK transactions. */
+    suspend fun setAccountId(accountId: String)
 }

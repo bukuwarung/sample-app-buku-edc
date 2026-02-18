@@ -58,4 +58,12 @@ class FakeSettingsRepository @Inject constructor() : SettingsRepository {
     override suspend fun setAccessToken(accessToken: String) {
         // No-op for fake
     }
+
+    override fun getAccountId(): Flow<String> {
+        return flowOf("")
+    }
+
+    override suspend fun setAccountId(accountId: String) {
+        // No-op for fake
+    }
 }

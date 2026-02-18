@@ -2,6 +2,7 @@ package com.bukuwarung.edc.ui.balance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.domain.transaction.BalanceInfo
 import com.bukuwarung.edc.domain.transaction.BalanceRepository
 import com.bukuwarung.edc.sdk.exceptions.BackendException
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.text.NumberFormat
@@ -38,7 +40,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BalanceCheckViewModel @Inject constructor(
     private val balanceRepository: BalanceRepository,
-    private val flowState: BalanceCheckFlowStateHolder
+    private val flowState: BalanceCheckFlowStateHolder,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     // ——————————————————————————————————————————————————————————————
@@ -92,10 +95,13 @@ class BalanceCheckViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = BalanceUiState.Loading
 
-            // Partners: accountId is a placeholder here — in production, use the actual
-            // account identifier from the card read step.
+            // Partners: accountId is the merchant's account UUID, configured in Developer Settings.
+            // In production, this would come from your auth/account service.
+            val accountId = settingsRepository.getAccountId().first()
+                .ifEmpty { "no-account-id-configured" }
+
             balanceRepository.checkBalance(
-                accountId = "default",
+                accountId = accountId,
                 accountType = flowState.accountType
             ).onSuccess { balanceInfo ->
                 // Partners: Save the result in the flow state holder so the receipt
