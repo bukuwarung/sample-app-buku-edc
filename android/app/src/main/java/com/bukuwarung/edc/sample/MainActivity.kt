@@ -16,6 +16,7 @@ import com.bukuwarung.edc.sample.ui.theme.SampleBukuEDCTheme
 import com.bukuwarung.edc.ui.HomeScreen
 import com.bukuwarung.edc.ui.HomeViewModel
 import com.bukuwarung.edc.ui.activation.ActivationScreen
+import com.bukuwarung.edc.ui.balance.BalanceCheckFlowStateHolder
 import com.bukuwarung.edc.ui.balance.BalanceCheckReceiptScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckSummaryScreen
 import com.bukuwarung.edc.ui.balance.BalanceCheckViewModel
@@ -58,13 +59,24 @@ class MainActivity : ComponentActivity() {
      */
     @Inject lateinit var transferFlowState: TransferFlowStateHolder
 
+    /**
+     * Partners: BalanceCheckFlowStateHolder is a @Singleton that accumulates user input
+     * across the balance check flow. The selected account type is saved here in the
+     * navigation callback and consumed by BalanceCheckViewModel via Hilt injection.
+     */
+    @Inject lateinit var balanceCheckFlowState: BalanceCheckFlowStateHolder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SampleBukuEDCTheme(darkTheme = false) {
                 Surface(color = Colors.White) {
-                    MainNavigation(intent = intent, transferFlowState = transferFlowState)
+                    MainNavigation(
+                        intent = intent,
+                        transferFlowState = transferFlowState,
+                        balanceCheckFlowState = balanceCheckFlowState
+                    )
                 }
             }
         }
@@ -72,7 +84,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainNavigation(intent: Intent?, transferFlowState: TransferFlowStateHolder) {
+fun MainNavigation(
+    intent: Intent?,
+    transferFlowState: TransferFlowStateHolder,
+    balanceCheckFlowState: BalanceCheckFlowStateHolder
+) {
     val navController = rememberNavController()
 
     LaunchedEffect(intent) {
@@ -208,10 +224,15 @@ fun MainNavigation(intent: Intent?, transferFlowState: TransferFlowStateHolder) 
 
         // Balance Check Flow
         composable(Screen.BalanceCheckSelectAccount.route) {
+            // Partners: Clear any previous balance check state when starting a new flow.
             TransferSelectAccountScreen(
                 variant = FlowVariant.BalanceCheck,
                 onBack = { navController.popBackStack() },
-                onAccountSelected = {
+                onAccountSelected = { accountType ->
+                    // Partners: Save the selected account type (TABUNGAN → SAVINGS, GIRO → CHECKING)
+                    // for the checkBalance() call later.
+                    balanceCheckFlowState.clear()
+                    balanceCheckFlowState.accountType = if (accountType == "GIRO") "CHECKING" else "SAVINGS"
                     navController.navigate(Screen.BalanceCheckInsertCard.route)
                 }
             )

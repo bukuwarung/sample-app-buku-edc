@@ -3,8 +3,10 @@ package com.bukuwarung.edc.data.di
 import com.bukuwarung.edc.data.card.CardRepositoryImpl
 import com.bukuwarung.edc.data.sdk.AuthTokenProvider
 import com.bukuwarung.edc.data.sdk.SdkInitializer
+import com.bukuwarung.edc.data.transaction.BalanceRepositoryImpl
 import com.bukuwarung.edc.data.transaction.TransactionEventRepositoryImpl
 import com.bukuwarung.edc.data.transaction.TransferRepositoryImpl
+import com.bukuwarung.edc.domain.transaction.BalanceRepository
 import com.bukuwarung.edc.domain.transaction.CardRepository
 import com.bukuwarung.edc.domain.transaction.TransactionEventRepository
 import com.bukuwarung.edc.domain.transaction.TransferRepository
@@ -75,6 +77,17 @@ object SdkModule {
     @Provides
     @Singleton
     fun provideTransactionEventRepository(impl: TransactionEventRepositoryImpl): TransactionEventRepository = impl
+
+    /**
+     * Provides the [BalanceRepository] backed by [BalanceRepositoryImpl].
+     *
+     * Partners: [BalanceRepository] handles the balance check operation via
+     * `AtmFeatures.checkBalance(accountId, accountType)`. The SDK 0.1.3 signature
+     * no longer requires `sourceDetails: BankDetails`.
+     */
+    @Provides
+    @Singleton
+    fun provideBalanceRepository(impl: BalanceRepositoryImpl): BalanceRepository = impl
 
     /**
      * Provides the [TransferRepository] backed by [TransferRepositoryImpl].

@@ -27,24 +27,38 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.ui.R
 import com.bukuwarung.edc.ui.theme.Colors
 
+/**
+ * Balance Check Receipt screen — detailed receipt view with all SDK data.
+ *
+ * Partners: This screen reads from [BalanceCheckViewModel.uiState], which was populated
+ * by the `AtmFeatures.checkBalance()` call on the Summary screen. The receipt displays
+ * all relevant fields from `CardReceiptResponse`:
+ * - timestamp, rrn (Ref No.) — transaction identifiers
+ * - accountType, cardNumber — card/account details
+ * - totalAmount — the account balance
+ * - cardHolderName, bankName — cardholder and bank info
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BalanceCheckReceiptScreen(
     viewModel: BalanceCheckViewModel,
     onClose: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         containerColor = Color(0xFFF5F5F5),
         topBar = {
@@ -64,6 +78,10 @@ fun BalanceCheckReceiptScreen(
             )
         }
     ) { padding ->
+        // Partners: The receipt screen only renders when the balance check was successful.
+        // If the state is not Success (e.g., navigated here without data), show fallback "-".
+        val state = uiState as? BalanceCheckViewModel.BalanceUiState.Success
+
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -81,44 +99,45 @@ fun BalanceCheckReceiptScreen(
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Partners: cardHolderName and bankName from CardReceiptResponse.
                     Text(
-                        text = viewModel.merchantName,
+                        text = state?.cardHolderName ?: "-",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = viewModel.merchantAddress,
+                        text = state?.bankName ?: "-",
                         fontSize = 12.sp,
                         color = Colors.TextGray,
                         textAlign = TextAlign.Center
                     )
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
-                    ReceiptRow("Waktu", viewModel.timestamp)
-                    ReceiptRow("Terminal ID", viewModel.terminalId)
-                    ReceiptRow("Merchant ID", viewModel.merchantId)
-                    ReceiptRow("Trace/RC", "00001/00")
-                    ReceiptRow("Ref No.", viewModel.refNo)
-                    
+
+                    // Partners: Transaction identifiers from CardReceiptResponse.
+                    ReceiptRow("Waktu", state?.timestamp ?: "-")
+                    ReceiptRow("Ref No.", state?.refNo ?: "-")
+
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray)
-                    
-                    ReceiptRow("Jenis Kartu", viewModel.accountType)
-                    ReceiptRow("Nomor Kartu", viewModel.cardNumber)
-                    
+
+                    // Partners: Card/account details from CardReceiptResponse.
+                    ReceiptRow("Jenis Kartu", state?.accountType ?: "-")
+                    ReceiptRow("Nomor Kartu", state?.cardNumber ?: "-")
+
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray)
-                    
+
+                    // Partners: totalAmount from CardReceiptResponse — the account balance.
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Total Saldo", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                        Text(viewModel.balanceAmount, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text(state?.balanceAmount ?: "-", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     }
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     Text(
                         "SIMPAN RESI INI SEBAGAI\nBUKTI TRANSAKSI YANG SAH",
                         fontSize = 10.sp,
@@ -128,9 +147,9 @@ fun BalanceCheckReceiptScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             Button(
                 onClick = { /* Print receipt */ },
                 modifier = Modifier.fillMaxWidth(),
@@ -154,13 +173,4 @@ fun ReceiptRow(label: String, value: String) {
         Text(label, fontSize = 12.sp, color = Colors.TextGray)
         Text(value, fontSize = 12.sp, fontWeight = FontWeight.Medium)
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BalanceCheckReceiptScreenPreview() {
-    BalanceCheckReceiptScreen(
-        viewModel = BalanceCheckViewModel(),
-        onClose = {}
-    )
 }

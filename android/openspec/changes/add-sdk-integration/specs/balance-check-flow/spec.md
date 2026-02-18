@@ -22,8 +22,8 @@ SDK via domain use cases, replacing the previous mock data approach.
 #### Scenario: Balance check execution via SDK
 
 - **WHEN** the user initiates a balance check after PIN entry
-- **THEN** the system calls `AtmFeatures.checkBalance()` with `accountId`,
-  `sourceDetails: BankDetails(bankCode, bankName)`, and `accountType`
+- **THEN** the system calls `AtmFeatures.checkBalance()` with `accountId` and `accountType`
+  (SDK 0.1.3: `sourceDetails: BankDetails` parameter was removed)
 
 #### Scenario: Balance Summary shows SDK balance
 

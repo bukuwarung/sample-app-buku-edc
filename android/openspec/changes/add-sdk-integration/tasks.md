@@ -52,15 +52,15 @@
 
 ## 5. Balance Check Flow SDK Integration
 
-- [ ] 5.1 Create `BalanceRepository` interface in `domain/transaction/` with `checkBalance()` method
-- [ ] 5.2 Implement `BalanceRepositoryImpl` in `data/transaction/` delegating to
-  `AtmFeatures.checkBalance(accountId, sourceDetails: BankDetails, accountType)`
-- [ ] 5.3 Add `BalanceRepository` binding to `SdkModule`
-- [ ] 5.4 Update Balance Check ViewModels to call `checkBalance()` with user-provided parameters
-- [ ] 5.5 Display `CardReceiptResponse` data (totalAmount, cardNumber, rrn) on summary/receipt
+- [x] 5.1 Create `BalanceRepository` interface in `domain/transaction/` with `checkBalance()` method
+- [x] 5.2 Implement `BalanceRepositoryImpl` in `data/transaction/` delegating to
+  `AtmFeatures.checkBalance(accountId, accountType)` (SDK 0.1.3: `sourceDetails` removed)
+- [x] 5.3 Add `BalanceRepository` binding to `SdkModule`
+- [x] 5.4 Update Balance Check ViewModels to call `checkBalance()` with user-provided parameters
+- [x] 5.5 Display `CardReceiptResponse` data (totalAmount, cardNumber, rrn) on summary/receipt
   screens
-- [ ] 5.6 Add error handling UI states for Balance Check screens
-- [ ] 5.7 Add inline comments explaining balance check integration for partners
+- [x] 5.6 Add error handling UI states for Balance Check screens
+- [x] 5.7 Add inline comments explaining balance check integration for partners
 
 ## 6. Cash Withdrawal Flow SDK Integration
 
@@ -119,7 +119,7 @@
     requirement, `SdkLogListener` setup
   - **Authentication**: Token provider `suspend () -> String`, 3-second timeout, connecting
     to partner's auth service
-  - **Balance Check**: `getCardInfo()` → `checkBalance(accountId, sourceDetails, accountType)`,
+  - **Balance Check**: `getCardInfo()` → `checkBalance(accountId, accountType)` (SDK 0.1.3),
     reading `CardReceiptResponse` fields
   - **Transfer**: Two-step `transferInquiry()` → save `transactionToken` →
     `transferPosting()`, token 15-min expiry, `CardReceiptResponse` fields

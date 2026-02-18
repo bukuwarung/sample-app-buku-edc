@@ -67,7 +67,7 @@ BukuEdcConfig(sdkKey: String, environment: BukuEdcEnv, logListener: SdkLogListen
 // Transaction Operations (all suspend, return kotlin.Result<T>)
 AtmFeatures.checkIncompleteTransactions(): Result<IncompleteTransaction?>
 AtmFeatures.getCardInfo(): Result<CardInfo>
-AtmFeatures.checkBalance(accountId, sourceDetails: BankDetails, accountType): Result<CardReceiptResponse>
+AtmFeatures.checkBalance(accountId, accountType): Result<CardReceiptResponse>  // SDK 0.1.3: sourceDetails removed
 AtmFeatures.transferInquiry(accountId, amount, destinationDetails, notes, isCashWithdrawal, accountType): Result<CardReceiptResponse>
 AtmFeatures.transferPosting(accountId, transactionToken): Result<CardReceiptResponse>
 AtmFeatures.getTransactionHistory(filter: TransactionFilter): Result<TransactionHistory>
