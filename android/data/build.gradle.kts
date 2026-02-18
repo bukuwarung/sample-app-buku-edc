@@ -14,6 +14,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        // SDK key for SANDBOX environment — partners replace with their own key
+        buildConfigField("String", "SDK_KEY", "\"sandbox-test-sdk-key-sample\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

@@ -2,16 +2,16 @@
 
 ## 1. Foundation - SDK Initialization and Core Types
 
-- [ ] 1.1 Add SDK key to `BuildConfig` via `build.gradle.kts` (test environment)
-- [ ] 1.2 Create `SdkInitializer` wrapper class in `data/sdk/` that wraps
+- [x] 1.1 Add SDK key to `BuildConfig` via `build.gradle.kts` (test environment)
+- [x] 1.2 Create `SdkInitializer` wrapper class in `data/sdk/` that wraps
   `BukuEdcSdk.initialize()` with `BukuEdcConfig` (sdkKey, `BukuEdcEnv.SANDBOX`, optional
   `SdkLogListener`) and exposes the `BukuEdcSdk` instance
-- [ ] 1.3 Call `SdkInitializer.initialize()` from `BukuEdcApplication.onCreate()` on Main Thread
-- [ ] 1.4 Create `SdkModule.kt` Hilt module in `data/di/` providing `SdkInitializer` singleton,
+- [x] 1.3 Call `SdkInitializer.initialize()` from `BukuEdcApplication.onCreate()` on Main Thread
+- [x] 1.4 Create `SdkModule.kt` Hilt module in `data/di/` providing `SdkInitializer` singleton,
   `BukuEdcSdk` (via `SdkInitializer`), and `AtmFeatures` instance (with token provider)
-- [ ] 1.5 Implement token provider `suspend () -> String` function for `AtmFeatures`
+- [x] 1.5 Implement token provider `suspend () -> String` function for `AtmFeatures`
   (placeholder returning test token; partners will replace with their auth service)
-- [ ] 1.6 Remove stub `SdkInteractor.kt` class
+- [x] 1.6 Remove stub `SdkInteractor.kt` class
 
 ## 2. Card Operations Integration
 
