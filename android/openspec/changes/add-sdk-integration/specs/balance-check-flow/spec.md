@@ -1,3 +1,12 @@
+## Figma Designs
+
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-5577&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-5625&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-5648&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-5812&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=37-3737&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=42-3610&m=dev
+
 ## MODIFIED Requirements
 
 ### Requirement: Use mock data for Balance Check content

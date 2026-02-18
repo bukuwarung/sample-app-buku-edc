@@ -1,3 +1,21 @@
+## Figma Designs
+
+Figma file: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android
+
+**Settings screens** (not covered by individual delta specs):
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=81-8041&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=81-8237&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=81-8925&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=81-9623&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=81-9686&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=81-9199&m=dev
+
+See individual delta specs for flow-specific Figma links:
+- `specs/transfer-flow/spec.md` — 7 screens
+- `specs/cash-withdrawal-flow/spec.md` — 15 screens
+- `specs/balance-check-flow/spec.md` — 6 screens
+- `specs/transaction-history/spec.md` — 8 screens
+
 ## Context
 
 The sample app demonstrates SDK features for partner developers. Currently, all transaction flows

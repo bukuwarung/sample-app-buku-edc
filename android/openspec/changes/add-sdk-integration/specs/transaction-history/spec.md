@@ -1,3 +1,14 @@
+## Figma Designs
+
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8545&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8947&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8905&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8907&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8665&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8941&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8914&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=63-8785&m=dev
+
 ## ADDED Requirements
 
 ### Requirement: Provide Transaction History Screen

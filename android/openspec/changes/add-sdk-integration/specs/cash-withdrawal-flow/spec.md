@@ -1,3 +1,21 @@
+## Figma Designs
+
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=35-2814&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=35-2712&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=35-2902&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=35-2925&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=35-3025&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=35-3043&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-5231&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-3993&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-3652&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-4199&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-4504&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-4468&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-4520&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-4511&m=dev
+- https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-4536&m=dev
+
 ## MODIFIED Requirements
 
 ### Requirement: Use mock data for Cash Withdrawal flow content

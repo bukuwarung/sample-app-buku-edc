@@ -1,3 +1,13 @@
+## Figma Designs
+
+- Pilih Rekening: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=1-735&m=dev
+- Pilih Bank: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=1-5079&m=dev
+- Rekening Tujuan: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=1-6439&m=dev
+- Insert Card: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=1-3428&m=dev
+- Informasi Kartu: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=1-3872&m=dev
+- Konfirmasi Transfer: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=1-6903&m=dev
+- Transfer Success: https://www.figma.com/design/581MJmETk7zbTmHUZT64Ap/SDK-Android?node-id=36-5103&m=dev
+
 ## MODIFIED Requirements
 
 ### Requirement: Use mock data for Transfer flow content
