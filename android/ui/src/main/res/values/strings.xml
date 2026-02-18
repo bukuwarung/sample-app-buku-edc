@@ -20,6 +20,7 @@
     <string name="transfer_lanjut">Lanjut</string>
     <string name="transfer_batal">Batal</string>
     <string name="common_back">Back</string>
+    <string name="common_retry">Coba Lagi</string>
     <string name="common_close">Close</string>
     <string name="common_tutup">Tutup</string>
     <string name="transfer_bank_tujuan">Bank Tujuan</string>

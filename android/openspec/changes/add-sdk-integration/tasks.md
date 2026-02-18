@@ -15,12 +15,12 @@
 
 ## 2. Card Operations Integration
 
-- [ ] 2.1 Create `CardRepository` interface in `domain/transaction/` with `getCardInfo()` and
+- [x] 2.1 Create `CardRepository` interface in `domain/transaction/` with `getCardInfo()` and
   `checkIncompleteTransactions()` methods
-- [ ] 2.2 Implement `CardRepositoryImpl` in `data/card/` delegating to `AtmFeatures.getCardInfo()`
+- [x] 2.2 Implement `CardRepositoryImpl` in `data/card/` delegating to `AtmFeatures.getCardInfo()`
   and `AtmFeatures.checkIncompleteTransactions()`
-- [ ] 2.3 Add `CardRepository` binding to `SdkModule`
-- [ ] 2.4 Update card info screens (Transfer, Balance, Withdrawal flows) to use `CardRepository`
+- [x] 2.3 Add `CardRepository` binding to `SdkModule`
+- [x] 2.4 Update card info screens (Transfer, Balance, Withdrawal flows) to use `CardRepository`
   instead of mock data
 
 ## 3. Transaction Event Monitoring

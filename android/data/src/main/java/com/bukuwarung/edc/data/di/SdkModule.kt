@@ -1,25 +1,17 @@
 package com.bukuwarung.edc.data.di
 
+import com.bukuwarung.edc.data.card.CardRepositoryImpl
 import com.bukuwarung.edc.data.sdk.AtmFeaturesFactory
+import com.bukuwarung.edc.data.sdk.AuthTokenProvider
 import com.bukuwarung.edc.data.sdk.SdkInitializer
+import com.bukuwarung.edc.domain.transaction.CardRepository
 import com.bukuwarung.edc.sdk.AtmFeatures
 import com.bukuwarung.edc.sdk.BukuEdcSdk
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Qualifier
 import javax.inject.Singleton
-
-/**
- * Qualifier for the token provider function used by SDK authentication.
- *
- * Partners: The token provider is injected wherever authenticated SDK operations
- * need a fresh auth token. See [SdkModule.provideTokenProvider] for implementation.
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class TokenProvider
 
 /**
  * Hilt module providing SDK dependencies.
@@ -61,20 +53,29 @@ object SdkModule {
     }
 
     /**
-     * Provides a placeholder token provider for SDK authentication.
+     * Provides the [CardRepository] backed by [CardRepositoryImpl].
      *
-     * Partners: Replace this with your actual auth service call, e.g.:
+     * Partners: [CardRepository] handles card-read and incomplete transaction operations.
+     * Swap the binding here if you want to inject a test double during development.
+     */
+    @Provides
+    @Singleton
+    fun provideCardRepository(impl: CardRepositoryImpl): CardRepository = impl
+
+    /**
+     * Provides the [AuthTokenProvider] for SDK authentication.
+     *
+     * Partners: Replace the lambda body with your actual auth service call, e.g.:
      * ```
-     * return { yourAuthService.getAccessToken() }
+     * AuthTokenProvider { yourAuthService.getAccessToken() }
      * ```
      * The token is used by [BukuEdcSdk.signInUserWithToken] before transactions.
      * The SDK enforces a 3-second timeout on token retrieval.
      */
     @Provides
     @Singleton
-    @TokenProvider
-    fun provideTokenProvider(): suspend () -> String {
+    fun provideAuthTokenProvider(): AuthTokenProvider {
         // Placeholder returning a test token — partners replace with their auth service
-        return { "test-partner-token-sandbox" }
+        return AuthTokenProvider { "test-partner-token-sandbox" }
     }
 }
