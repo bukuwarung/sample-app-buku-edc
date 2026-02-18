@@ -43,7 +43,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation("com.bukuwarung.edc.sdk:core:0.1.0-SNAPSHOT")
+    implementation("com.bukuwarung.edc.sdk:buku-edc-sdk:0.1.3-SNAPSHOT")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

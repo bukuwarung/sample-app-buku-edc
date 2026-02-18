@@ -7,7 +7,7 @@ package com.bukuwarung.edc.data.sdk
  * ```
  * AuthTokenProvider { yourAuthService.getAccessToken() }
  * ```
- * The token is passed to [com.bukuwarung.edc.sdk.BukuEdcSdk.signInUserWithToken]
+ * The token is passed to [com.bukuwarung.edc.sdk.AtmFeatures] via `sdk.getAtmFeatures { token }`
  * before each ATM transaction. The SDK enforces a 3-second timeout on token retrieval.
  */
 fun interface AuthTokenProvider {

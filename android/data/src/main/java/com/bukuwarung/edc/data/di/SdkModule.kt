@@ -1,7 +1,6 @@
 package com.bukuwarung.edc.data.di
 
 import com.bukuwarung.edc.data.card.CardRepositoryImpl
-import com.bukuwarung.edc.data.sdk.AtmFeaturesFactory
 import com.bukuwarung.edc.data.sdk.AuthTokenProvider
 import com.bukuwarung.edc.data.sdk.SdkInitializer
 import com.bukuwarung.edc.data.transaction.TransactionEventRepositoryImpl
@@ -19,7 +18,7 @@ import javax.inject.Singleton
  * Hilt module providing SDK dependencies.
  *
  * Partners: This module wires up the core SDK objects for dependency injection.
- * - [SdkInitializer] — wraps SDK initialization
+ * - [SdkInitializer] — wraps SDK initialization via [BukuEdcSdkFactory]
  * - [BukuEdcSdk] — main SDK interface for device-level operations
  * - [AtmFeatures] — transaction operations (balance, transfer, withdrawal)
  * - Token provider — your auth token retrieval function
@@ -43,15 +42,15 @@ object SdkModule {
      *
      * Partners: AtmFeatures is the main interface for all transaction operations
      * (balance check, transfer inquiry/posting, card info).
-     *
-     * Note: Uses [AtmFeaturesFactory] as a workaround for SDK 0.1.0-SNAPSHOT where
-     * `AtmFeatures.create()` was stripped by R8 (missing `@Keep` annotation).
-     * Once the SDK team fixes this, replace with: `AtmFeatures.create()`
+     * The [AuthTokenProvider] is called before each transaction to supply your auth token.
      */
     @Provides
     @Singleton
-    fun provideAtmFeatures(): AtmFeatures {
-        return AtmFeaturesFactory.create()
+    fun provideAtmFeatures(
+        sdk: BukuEdcSdk,
+        tokenProvider: AuthTokenProvider
+    ): AtmFeatures {
+        return sdk.getAtmFeatures { tokenProvider.getToken() }
     }
 
     /**
@@ -82,7 +81,7 @@ object SdkModule {
      * ```
      * AuthTokenProvider { yourAuthService.getAccessToken() }
      * ```
-     * The token is used by [BukuEdcSdk.signInUserWithToken] before transactions.
+     * The token is used by [AtmFeatures] before transactions.
      * The SDK enforces a 3-second timeout on token retrieval.
      */
     @Provides

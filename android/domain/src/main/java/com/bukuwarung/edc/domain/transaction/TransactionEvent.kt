@@ -3,7 +3,7 @@ package com.bukuwarung.edc.domain.transaction
 /**
  * Domain representation of SDK transaction lifecycle events.
  *
- * Mapped from `com.bukuwarung.edc.sdk.models.TransactionEvent` in the data layer.
+ * Mapped from `com.bukuwarung.edc.sdk.model.TransactionEvent` in the data layer.
  * ViewModels observe these events via [TransactionEventRepository.transactionEvents]
  * to drive real-time UI state during card transactions.
  *

@@ -46,10 +46,9 @@ class TransferCardInfoViewModel @Inject constructor(
     /**
      * Fetches card info from the repository. Called automatically on ViewModel creation.
      *
-     * Partners: This triggers [CardRepository.getCardInfo], which in the SANDBOX
-     * environment calls [com.bukuwarung.edc.sdk.BukuEdcSdk.signInUserWithToken] and
-     * returns test card data. In production, replace with data from your
-     * [com.bukuwarung.edc.sdk.models.CardReceiptResponse].
+     * Partners: This triggers [CardRepository.getCardInfo], which delegates to
+     * `AtmFeatures.getCardInfo()`. In SANDBOX with `testingMock=true`, the SDK
+     * returns test card data. In production, real card data is read from the terminal.
      */
     fun loadCardInfo() {
         viewModelScope.launch {

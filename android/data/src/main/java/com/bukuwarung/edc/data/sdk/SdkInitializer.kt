@@ -4,11 +4,11 @@ import android.app.Application
 import android.util.Log
 import com.bukuwarung.edc.data.BuildConfig
 import com.bukuwarung.edc.sdk.BukuEdcSdk
+import com.bukuwarung.edc.sdk.factory.BukuEdcSdkFactory
 import com.bukuwarung.edc.sdk.logging.SdkLogEvent
 import com.bukuwarung.edc.sdk.logging.SdkLogListener
-import com.bukuwarung.edc.sdk.models.BukuEdcConfig
-import com.bukuwarung.edc.sdk.models.BukuEdcEnv
-import kotlinx.coroutines.runBlocking
+import com.bukuwarung.edc.sdk.model.BukuEdcConfig
+import com.bukuwarung.edc.sdk.model.BukuEdcEnv
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class SdkInitializer @Inject constructor() {
 
-    private val sdk: BukuEdcSdk = BukuEdcSdk.create()
+    private lateinit var sdk: BukuEdcSdk
 
     /**
      * The log listener that forwards SDK logs to Android Logcat.
@@ -40,24 +40,21 @@ class SdkInitializer @Inject constructor() {
      * Initializes the SDK with SANDBOX configuration.
      *
      * Must be called from [Application.onCreate] on the Main Thread before any SDK operations.
-     * Uses [runBlocking] because SDK initialization must complete before the app proceeds.
+     * Uses [BukuEdcSdkFactory.initialize] which returns the SDK instance directly.
      *
      * Partners: Change [BukuEdcEnv.SANDBOX] to [BukuEdcEnv.PRODUCTION] for production builds.
+     * Set [BukuEdcConfig.testingMock] to `false` in production.
      */
     fun initialize(application: Application) {
         val config = BukuEdcConfig(
             sdkKey = BuildConfig.SDK_KEY,
-            environment = BukuEdcEnv.SANDBOX
+            environment = BukuEdcEnv.SANDBOX,
+            testingMock = true, // Enable mock responses in SANDBOX for testing without EDC device
+            logListener = logListener
         )
 
-        // Register log listener before initialization so we capture init logs
-        sdk.addLogListener(logListener)
-
-        runBlocking {
-            sdk.initialize(application, config)
-                .onSuccess { Log.i(TAG, "SDK initialized successfully") }
-                .onFailure { Log.e(TAG, "SDK initialization failed", it) }
-        }
+        sdk = BukuEdcSdkFactory.initialize(application, config)
+        Log.i(TAG, "SDK initialized successfully (SANDBOX, testingMock=true)")
     }
 
     /**

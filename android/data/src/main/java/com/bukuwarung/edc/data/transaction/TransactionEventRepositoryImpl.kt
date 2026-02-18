@@ -1,8 +1,8 @@
 package com.bukuwarung.edc.data.transaction
 
 import com.bukuwarung.edc.domain.transaction.TransactionEvent
-import com.bukuwarung.edc.sdk.BukuEdcSdk
-import com.bukuwarung.edc.sdk.models.TransactionEvent as SdkTransactionEvent
+import com.bukuwarung.edc.sdk.AtmFeatures
+import com.bukuwarung.edc.sdk.model.TransactionEvent as SdkTransactionEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import com.bukuwarung.edc.domain.transaction.TransactionEventRepository
@@ -12,18 +12,13 @@ import javax.inject.Inject
  * Repository implementation that bridges the BukuEDC SDK's transaction event stream
  * to domain-level [TransactionEvent] objects consumed by ViewModels.
  *
- * **Note:** We observe `BukuEdcSdk.transactionEvents` (on the SDK root) rather than
- * `AtmFeatures.transactionEvents` because the `AtmFeatures` implementation was
- * stripped by R8 in this SDK snapshot (returns `null`). The SDK root provides the
- * same SharedFlow correctly.
- *
  * **Partner guidance:**
  * - Events are emitted during active SDK operations (`checkBalance`, `transferInquiry`, etc.)
  * - Each `.collect {}` call on [transactionEvents] independently receives events from that
  *   moment forward — multiple screens can observe simultaneously.
  */
 class TransactionEventRepositoryImpl @Inject constructor(
-    private val sdk: BukuEdcSdk
+    private val atmFeatures: AtmFeatures
 ) : TransactionEventRepository {
 
     /**
@@ -33,7 +28,7 @@ class TransactionEventRepositoryImpl @Inject constructor(
      * `FirmwareUpdate`, `RequiresUserAction`) are filtered out via [mapNotNull].
      */
     override val transactionEvents: Flow<TransactionEvent> =
-        sdk.transactionEvents.mapNotNull { it.toDomainOrNull() }
+        atmFeatures.transactionEvents.mapNotNull { it.toDomainOrNull() }
 }
 
 /**
