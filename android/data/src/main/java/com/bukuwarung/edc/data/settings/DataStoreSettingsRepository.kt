@@ -20,6 +20,11 @@ class DataStoreSettingsRepository @Inject constructor(
     private val fakeSettingsRepository: FakeSettingsRepository // Delegate other calls to fake for now
 ) : SettingsRepository {
 
+    companion object {
+        /** Default sandbox merchant account UUID for development/testing. */
+        const val DEFAULT_ACCOUNT_ID = "5252d46d-346a-4e67-a9b7-3ab63a8e4a72"
+    }
+
     private object PreferencesKeys {
         val IS_FIRST_TIME_USER = booleanPreferencesKey("is_first_time_user")
         val PHONE_NUMBER = stringPreferencesKey("phone_number")
@@ -105,7 +110,7 @@ class DataStoreSettingsRepository @Inject constructor(
                 }
             }
             .map { preferences ->
-                preferences[PreferencesKeys.ACCOUNT_ID] ?: ""
+                preferences[PreferencesKeys.ACCOUNT_ID] ?: DEFAULT_ACCOUNT_ID
             }
     }
 
