@@ -6,6 +6,7 @@ import com.bukuwarung.edc.data.sdk.SdkInitializer
 import com.bukuwarung.edc.data.transaction.BalanceRepositoryImpl
 import com.bukuwarung.edc.data.transaction.TransactionEventRepositoryImpl
 import com.bukuwarung.edc.data.transaction.TransferRepositoryImpl
+import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.domain.transaction.BalanceRepository
 import com.bukuwarung.edc.domain.transaction.CardRepository
 import com.bukuwarung.edc.domain.transaction.TransactionEventRepository
@@ -16,6 +17,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import javax.inject.Singleton
 
 /**
@@ -105,17 +107,23 @@ object SdkModule {
     /**
      * Provides the [AuthTokenProvider] for SDK authentication.
      *
-     * Partners: Replace the lambda body with your actual auth service call, e.g.:
+     * Partners: This reads the access token from DataStore (set via Developer Settings).
+     * The token is obtained by calling the token exchange API:
+     *   POST https://api-dev.bukuwarung.com/sdk/v1/token/exchange
+     *   with partnerId, partnerSecret, and partnerUserToken.
+     *
+     * In production, replace this with your actual auth service call, e.g.:
      * ```
      * AuthTokenProvider { yourAuthService.getAccessToken() }
      * ```
-     * The token is used by [AtmFeatures] before transactions.
      * The SDK enforces a 3-second timeout on token retrieval.
      */
     @Provides
     @Singleton
-    fun provideAuthTokenProvider(): AuthTokenProvider {
-        // Placeholder returning a test token — partners replace with their auth service
-        return AuthTokenProvider { "test-partner-token-sandbox" }
+    fun provideAuthTokenProvider(settingsRepository: SettingsRepository): AuthTokenProvider {
+        return AuthTokenProvider {
+            val token = settingsRepository.getAccessToken().first()
+            token.ifEmpty { "no-token-configured" }
+        }
     }
 }

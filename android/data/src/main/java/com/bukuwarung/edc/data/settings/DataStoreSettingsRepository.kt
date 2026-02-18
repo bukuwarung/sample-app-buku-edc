@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.bukuwarung.edc.domain.settings.AccountSettings
 import com.bukuwarung.edc.domain.settings.BankAccount
 import com.bukuwarung.edc.domain.settings.SettingsRepository
@@ -21,6 +22,8 @@ class DataStoreSettingsRepository @Inject constructor(
 
     private object PreferencesKeys {
         val IS_FIRST_TIME_USER = booleanPreferencesKey("is_first_time_user")
+        val PHONE_NUMBER = stringPreferencesKey("phone_number")
+        val ACCESS_TOKEN = stringPreferencesKey("access_token")
     }
 
     override suspend fun getAccountSettings(): AccountSettings {
@@ -48,6 +51,46 @@ class DataStoreSettingsRepository @Inject constructor(
     override suspend fun setIsFirstTimeUser(isFirstTime: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.IS_FIRST_TIME_USER] = isFirstTime
+        }
+    }
+
+    override fun getPhoneNumber(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[PreferencesKeys.PHONE_NUMBER] ?: ""
+            }
+    }
+
+    override suspend fun setPhoneNumber(phoneNumber: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.PHONE_NUMBER] = phoneNumber
+        }
+    }
+
+    override fun getAccessToken(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[PreferencesKeys.ACCESS_TOKEN] ?: ""
+            }
+    }
+
+    override suspend fun setAccessToken(accessToken: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.ACCESS_TOKEN] = accessToken
         }
     }
 }

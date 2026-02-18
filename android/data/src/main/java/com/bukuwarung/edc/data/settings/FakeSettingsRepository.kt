@@ -42,4 +42,20 @@ class FakeSettingsRepository @Inject constructor() : SettingsRepository {
     override suspend fun setIsFirstTimeUser(isFirstTime: Boolean) {
         // No-op for fake
     }
+
+    override fun getPhoneNumber(): Flow<String> {
+        return flowOf("")
+    }
+
+    override suspend fun setPhoneNumber(phoneNumber: String) {
+        // No-op for fake
+    }
+
+    override fun getAccessToken(): Flow<String> {
+        return flowOf("")
+    }
+
+    override suspend fun setAccessToken(accessToken: String) {
+        // No-op for fake
+    }
 }
