@@ -23,6 +23,7 @@ class DataStoreSettingsRepository @Inject constructor(
     companion object {
         /** Default sandbox merchant account UUID for development/testing. */
         const val DEFAULT_ACCOUNT_ID = "5252d46d-346a-4e67-a9b7-3ab63a8e4a72"
+        const val DEFAULT_PHONE_NUMBER = "8299447200"
     }
 
     private object PreferencesKeys {
@@ -70,7 +71,7 @@ class DataStoreSettingsRepository @Inject constructor(
                 }
             }
             .map { preferences ->
-                preferences[PreferencesKeys.PHONE_NUMBER] ?: ""
+                preferences[PreferencesKeys.PHONE_NUMBER] ?: DEFAULT_PHONE_NUMBER
             }
     }
 
