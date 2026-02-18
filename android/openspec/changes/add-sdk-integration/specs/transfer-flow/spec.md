@@ -43,8 +43,14 @@ replacing the previous mock data approach.
 - **THEN** `transferPosting()` throws `TokenExpiredException`
 - **AND THEN** the UI shows an error and prompts the user to re-do the inquiry step
 
+#### Scenario: Transfer invalid token
+
+- **WHEN** `transferPosting()` is called with an invalid `transactionToken`
+- **THEN** `transferPosting()` throws `InvalidTokenException`
+- **AND THEN** the UI shows an error and prompts the user to re-do the inquiry step
+
 #### Scenario: Transfer failure
 
-- **WHEN** `transferInquiry()` or `transferPosting()` fails with a `DeviceSdkException` or
-  `BackendException`
-- **THEN** the UI displays an error state with the mapped error message
+- **WHEN** `transferInquiry()` or `transferPosting()` fails with a `DeviceSdkException`,
+  `BackendException`, `TokenExpiredException`, or `InvalidTokenException`
+- **THEN** the UI displays an error state with the error message

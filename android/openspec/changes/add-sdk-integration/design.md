@@ -186,13 +186,13 @@ data/
     └── CardRepositoryImpl.kt       # Delegates to getCardInfo, checkIncompleteTransactions
 
 domain/
-├── transaction/
-│   ├── TransferRepository.kt
-│   ├── BalanceRepository.kt
-│   ├── HistoryRepository.kt
-│   ├── CardRepository.kt
-│   └── models/             # Domain models mapped from SDK types
-└── transaction/usecases/    # Use cases wrapping repository calls
+└── transaction/
+    ├── TransferRepository.kt
+    ├── BalanceRepository.kt
+    ├── HistoryRepository.kt
+    ├── CardRepository.kt
+    ├── models/             # Domain models mapped from SDK types
+    └── usecases/           # Use cases wrapping repository calls
 
 ui/
 ├── history/

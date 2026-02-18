@@ -33,7 +33,7 @@ transfer API with `isCashWithdrawal = true`.
 
 - **WHEN** the user confirms withdrawal details (account, amount)
 - **THEN** the system calls `AtmFeatures.transferInquiry()` with `accountId`, `amount`,
-  `destinationDetails: BankDetails`, `isCashWithdrawal = true`, and `accountType`
+  `destinationDetails: BankDetails`, `notes` (optional), `isCashWithdrawal = true`, and `accountType`
 - **AND THEN** the `CardReceiptResponse` containing `amount`, `adminFee`, `totalAmount`, and
   `transactionToken` is displayed on the Konfirmasi screen
 
@@ -51,8 +51,14 @@ transfer API with `isCashWithdrawal = true`.
 - **THEN** the receipt details (`cardNumber`, `bankName`, `rrn`, `approvalCode`, `totalAmount`,
   `adminFee`) are rendered from the `CardReceiptResponse`
 
+#### Scenario: Withdrawal token expiration
+
+- **WHEN** the `transactionToken` from inquiry has expired (>15 minutes)
+- **THEN** `transferPosting()` throws `TokenExpiredException`
+- **AND THEN** the UI shows an error and prompts the user to re-do the inquiry step
+
 #### Scenario: Withdrawal failure
 
-- **WHEN** `transferInquiry()` or `transferPosting()` fails with a `DeviceSdkException` or
-  `BackendException`
-- **THEN** the UI displays an error state with the mapped error message
+- **WHEN** `transferInquiry()` or `transferPosting()` fails with a `DeviceSdkException`,
+  `BackendException`, `TokenExpiredException`, or `InvalidTokenException`
+- **THEN** the UI displays an error state with the error message

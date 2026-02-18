@@ -47,26 +47,26 @@ how to handle each exception in their own apps.
 
 - **WHEN** an SDK operation fails with `DeviceSdkException` (codes: E01 card read, E02 card
   removed, E06 PIN cancelled, E21 timeout, E99 unknown)
-- **THEN** the ViewModel catches `DeviceSdkException` and displays an error with the code
+- **THEN** the ViewModel handles `DeviceSdkException` and displays an error with the code
   and message
 
 #### Scenario: Backend error handling
 
 - **WHEN** an SDK operation fails with `BackendException` (codes: 30 format error, 55 invalid
   PIN, 03 invalid merchant)
-- **THEN** the ViewModel catches `BackendException` and displays an error with the code
+- **THEN** the ViewModel handles `BackendException` and displays an error with the code
   and message
 
 #### Scenario: Token expired error handling
 
 - **WHEN** `transferPosting()` fails with `TokenExpiredException`
-- **THEN** the ViewModel catches `TokenExpiredException` and prompts the user to re-do the
+- **THEN** the ViewModel handles `TokenExpiredException` and prompts the user to re-do the
   inquiry step
 
 #### Scenario: Invalid token error handling
 
 - **WHEN** `transferPosting()` fails with `InvalidTokenException`
-- **THEN** the ViewModel catches `InvalidTokenException` and prompts the user to re-do the
+- **THEN** the ViewModel handles `InvalidTokenException` and prompts the user to re-do the
   inquiry step
 
 ### Requirement: Provide Repository Implementations in Data Module
