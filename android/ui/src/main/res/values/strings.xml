@@ -103,6 +103,12 @@
     <string name="settings_toast_feature_unavailable">Fitur belum tersedia</string>
     <string name="settings_toast_store_name_updated">Berhasil ubah nama toko</string>
 
+    <!-- Transaction History -->
+    <string name="history_title">Riwayat Transaksi</string>
+    <string name="history_loading">Memuat riwayat transaksi…</string>
+    <string name="history_empty_title">Belum Ada Riwayat</string>
+    <string name="history_empty_desc">Belum ada riwayat transaksi yang tersedia.</string>
+
     <!-- Cash Withdrawal -->
     <string name="tarik_tunai_title">Tarik Tunai</string>
     <string name="cash_withdrawal_first_time_title">Anda Belum Memiliki Rekening Tujuan</string>

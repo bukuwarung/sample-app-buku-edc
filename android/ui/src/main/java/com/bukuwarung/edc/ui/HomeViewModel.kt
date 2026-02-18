@@ -50,8 +50,8 @@ class HomeViewModel @Inject constructor(
                     }
                 }
 
+                HomeAction.Riwayat -> _uiEvents.emit(HomeUiEvent.NavigateToHistory)
                 HomeAction.Pengaturan -> _uiEvents.emit(HomeUiEvent.NavigateToSettings)
-                else -> _uiEvents.emit(HomeUiEvent.ShowToast(action))
             }
         }
     }
@@ -64,5 +64,6 @@ sealed interface HomeUiEvent {
     data object NavigateToCashWithdrawal : HomeUiEvent
     data object NavigateToFirstTimeUserPrompt : HomeUiEvent
     data object NavigateToAddBankAccount : HomeUiEvent
+    data object NavigateToHistory : HomeUiEvent
     data object NavigateToSettings : HomeUiEvent
 }

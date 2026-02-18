@@ -75,19 +75,19 @@
 
 ## 7. Transaction History Feature
 
-- [ ] 7.1 Create `HistoryRepository` interface in `domain/transaction/` with
+- [x] 7.1 Create `HistoryRepository` interface in `domain/transaction/` with
   `getTransactionHistory(filter: TransactionFilter)` method
-- [ ] 7.2 Create domain models for transaction history (mapped from SDK's `HistoryItem`,
+- [x] 7.2 Create domain models for transaction history (mapped from SDK's `HistoryItem`,
   `PaginationDetails`)
-- [ ] 7.3 Implement `HistoryRepositoryImpl` in `data/transaction/` delegating to
+- [x] 7.3 Implement `HistoryRepositoryImpl` in `data/transaction/` delegating to
   `AtmFeatures.getTransactionHistory()`
-- [ ] 7.4 Add `HistoryRepository` binding to `SdkModule`
-- [ ] 7.5 Create `HistoryViewModel` with Hilt injection, pagination state management
-- [ ] 7.6 Create `HistoryScreen.kt` UI with list, empty, loading, and error states
+- [x] 7.4 Add `HistoryRepository` binding to `SdkModule`
+- [x] 7.5 Create `HistoryViewModel` with Hilt injection, pagination state management
+- [x] 7.6 Create `HistoryScreen.kt` UI with list, empty, loading, and error states
   (each `HistoryItem` shows: transactionId, amount, status, date, type)
-- [ ] 7.7 Add History navigation route to `MainActivity`
-- [ ] 7.8 Update `HomeViewModel` to emit navigation event for Riwayat action
-- [ ] 7.9 Add inline comments explaining history retrieval and pagination for partners
+- [x] 7.7 Add History navigation route to `MainActivity`
+- [x] 7.8 Update `HomeViewModel` to emit navigation event for Riwayat action
+- [x] 7.9 Add inline comments explaining history retrieval and pagination for partners
 
 ## 8. Incomplete Transaction Handling
 

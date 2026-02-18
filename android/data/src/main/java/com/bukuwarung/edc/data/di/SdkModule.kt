@@ -5,9 +5,11 @@ import com.bukuwarung.edc.data.sdk.AuthTokenProvider
 import com.bukuwarung.edc.data.sdk.SdkInitializer
 import com.bukuwarung.edc.data.transaction.BalanceRepositoryImpl
 import com.bukuwarung.edc.data.transaction.TransactionEventRepositoryImpl
+import com.bukuwarung.edc.data.transaction.HistoryRepositoryImpl
 import com.bukuwarung.edc.data.transaction.TransferRepositoryImpl
 import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.domain.transaction.BalanceRepository
+import com.bukuwarung.edc.domain.transaction.HistoryRepository
 import com.bukuwarung.edc.domain.transaction.CardRepository
 import com.bukuwarung.edc.domain.transaction.TransactionEventRepository
 import com.bukuwarung.edc.domain.transaction.TransferRepository
@@ -103,6 +105,17 @@ object SdkModule {
     @Provides
     @Singleton
     fun provideTransferRepository(impl: TransferRepositoryImpl): TransferRepository = impl
+
+    /**
+     * Provides the [HistoryRepository] backed by [HistoryRepositoryImpl].
+     *
+     * Partners: [HistoryRepository] retrieves paginated transaction history via
+     * `AtmFeatures.getTransactionHistory(TransactionFilter)`. Use `TransactionFilter`
+     * to control pagination, date range, and optional type/status filters.
+     */
+    @Provides
+    @Singleton
+    fun provideHistoryRepository(impl: HistoryRepositoryImpl): HistoryRepository = impl
 
     /**
      * Provides the [AuthTokenProvider] for SDK authentication.

@@ -24,6 +24,8 @@ import com.bukuwarung.edc.ui.cash.CashWithdrawalFirstTimeUserScreen
 import com.bukuwarung.edc.ui.common.FlowVariant
 import com.bukuwarung.edc.ui.developer.DeveloperSettingsScreen
 import com.bukuwarung.edc.ui.developer.DeveloperSettingsViewModel
+import com.bukuwarung.edc.ui.history.HistoryScreen
+import com.bukuwarung.edc.ui.history.HistoryViewModel
 import com.bukuwarung.edc.ui.navigation.Screen
 import com.bukuwarung.edc.ui.settings.SettingsAccountScreen
 import com.bukuwarung.edc.ui.settings.SettingsBankAccountsScreen
@@ -116,6 +118,9 @@ fun MainNavigation(
                 },
                 onNavigateToAddBankAccount = {
                     navController.navigate(Screen.SettingsBankAccounts.route)
+                },
+                onNavigateToHistory = {
+                    navController.navigate(Screen.History.route)
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
@@ -408,6 +413,17 @@ fun MainNavigation(
                 onClose = {
                     navController.popBackStack(Screen.Home.route, false)
                 }
+            )
+        }
+        // Transaction History
+        // Partners: The History screen retrieves paginated transaction records via
+        // AtmFeatures.getTransactionHistory(). HistoryViewModel handles pagination
+        // automatically — the screen supports infinite-scroll loading.
+        composable(Screen.History.route) {
+            val viewModel: HistoryViewModel = hiltViewModel()
+            HistoryScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
             )
         }
         composable(Screen.DeveloperSettings.route) {

@@ -63,6 +63,7 @@ fun HomeScreen(
     onNavigateToCashWithdrawal: () -> Unit,
     onNavigateToFirstTimeUserPrompt: () -> Unit,
     onNavigateToAddBankAccount: () -> Unit,
+    onNavigateToHistory: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     val context = LocalContext.current
@@ -89,6 +90,9 @@ fun HomeScreen(
 
                 HomeUiEvent.NavigateToAddBankAccount -> {
                     onNavigateToAddBankAccount()
+                }
+                HomeUiEvent.NavigateToHistory -> {
+                    onNavigateToHistory()
                 }
                 HomeUiEvent.NavigateToSettings -> {
                     onNavigateToSettings()
@@ -275,6 +279,7 @@ fun HomeScreenPreview() {
         onNavigateToCashWithdrawal = {},
         onNavigateToFirstTimeUserPrompt = {},
         onNavigateToAddBankAccount = {},
+        onNavigateToHistory = {},
         onNavigateToSettings = {}
     )
 }
