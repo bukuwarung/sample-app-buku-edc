@@ -35,20 +35,20 @@
 
 ## 4. Transfer Flow SDK Integration
 
-- [ ] 4.1 Create `TransferRepository` interface in `domain/transaction/` with
+- [x] 4.1 Create `TransferRepository` interface in `domain/transaction/` with
   `transferInquiry()` and `transferPosting()` methods
-- [ ] 4.2 Implement `TransferRepositoryImpl` in `data/transaction/` delegating to
+- [x] 4.2 Implement `TransferRepositoryImpl` in `data/transaction/` delegating to
   `AtmFeatures.transferInquiry()` and `AtmFeatures.transferPosting()`
-- [ ] 4.3 Add `TransferRepository` binding to `SdkModule`
-- [ ] 4.4 Update Transfer flow ViewModels to call `transferInquiry()` with user-provided
+- [x] 4.3 Add `TransferRepository` binding to `SdkModule`
+- [x] 4.4 Update Transfer flow ViewModels to call `transferInquiry()` with user-provided
   `accountId`, `amount`, `destinationDetails: BankDetails`, `notes`, and `accountType`
-- [ ] 4.5 Save `transactionToken` from inquiry response for posting step
-- [ ] 4.6 Update Transfer confirmation screen to call `transferPosting()` with saved token
-- [ ] 4.7 Display `CardReceiptResponse` data (amount, adminFee, totalAmount, rrn, approvalCode)
+- [x] 4.5 Save `transactionToken` from inquiry response for posting step
+- [x] 4.6 Update Transfer confirmation screen to call `transferPosting()` with saved token
+- [x] 4.7 Display `CardReceiptResponse` data (amount, adminFee, totalAmount, rrn, approvalCode)
   on success screen
-- [ ] 4.8 Add error handling for `TokenExpiredException` (token valid 15 min) and
+- [x] 4.8 Add error handling for `TokenExpiredException` (token valid 15 min) and
   `InvalidTokenException`
-- [ ] 4.9 Add inline comments explaining two-step transfer flow for partners
+- [x] 4.9 Add inline comments explaining two-step transfer flow for partners
 
 ## 5. Balance Check Flow SDK Integration
 

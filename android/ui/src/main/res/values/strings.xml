@@ -48,12 +48,19 @@
     <string name="transfer_pemilik_rekening">Pemilik Rekening</string>
     <string name="transfer_nominal">Nominal</string>
     <string name="transfer_berita">Berita</string>
+    <string name="transfer_admin_fee">Biaya Admin</string>
+    <string name="transfer_total">Total</string>
     <string name="transfer_action_transfer">Transfer</string>
     <string name="transfer_hore_berhasil">Hore! Transaksi berhasil</string>
     <string name="transfer_bukti_transaksi">Bukti Transaksi Pelanggan</string>
     <string name="transfer_label_waktu">Waktu</string>
     <string name="transfer_label_ref_no">Ref No.</string>
     <string name="transfer_label_transfer_berhasil">Transfer Berhasil</string>
+    <string name="transfer_label_approval_code">Kode Approval</string>
+    <string name="transfer_label_status">Status</string>
+    <string name="transfer_label_nominal">Nominal</string>
+    <string name="transfer_label_admin_fee">Biaya Admin</string>
+    <string name="transfer_label_total">Total</string>
     <string name="transfer_cetak_struk">Cetak Struk</string>
 
     <string name="balance_check_title">Cek Saldo</string>

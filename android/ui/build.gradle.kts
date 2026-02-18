@@ -43,6 +43,10 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    // Partners: SDK dependency needed for exception types (DeviceSdkException, BackendException,
+    // TokenExpiredException, InvalidTokenException) used in ViewModel error handling.
+    // Per design decision: use raw SDK exceptions rather than wrapping them in domain types.
+    implementation("com.bukuwarung.edc.sdk:buku-edc-sdk:0.1.3-SNAPSHOT")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

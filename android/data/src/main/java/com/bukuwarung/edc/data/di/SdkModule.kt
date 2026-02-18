@@ -4,8 +4,10 @@ import com.bukuwarung.edc.data.card.CardRepositoryImpl
 import com.bukuwarung.edc.data.sdk.AuthTokenProvider
 import com.bukuwarung.edc.data.sdk.SdkInitializer
 import com.bukuwarung.edc.data.transaction.TransactionEventRepositoryImpl
+import com.bukuwarung.edc.data.transaction.TransferRepositoryImpl
 import com.bukuwarung.edc.domain.transaction.CardRepository
 import com.bukuwarung.edc.domain.transaction.TransactionEventRepository
+import com.bukuwarung.edc.domain.transaction.TransferRepository
 import com.bukuwarung.edc.sdk.AtmFeatures
 import com.bukuwarung.edc.sdk.BukuEdcSdk
 import dagger.Module
@@ -73,6 +75,19 @@ object SdkModule {
     @Provides
     @Singleton
     fun provideTransactionEventRepository(impl: TransactionEventRepositoryImpl): TransactionEventRepository = impl
+
+    /**
+     * Provides the [TransferRepository] backed by [TransferRepositoryImpl].
+     *
+     * Partners: [TransferRepository] handles the two-step transfer flow:
+     * 1. `transferInquiry()` — retrieves fees and a single-use transaction token
+     * 2. `transferPosting()` — executes the transfer using the token (valid 15 min)
+     *
+     * The same repository is used for cash withdrawals (with `isCashWithdrawal = true`).
+     */
+    @Provides
+    @Singleton
+    fun provideTransferRepository(impl: TransferRepositoryImpl): TransferRepository = impl
 
     /**
      * Provides the [AuthTokenProvider] for SDK authentication.

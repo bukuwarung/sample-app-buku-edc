@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,17 +50,21 @@ fun TransferConfirmScreen(
     onConfirm: () -> Unit,
     onCancel: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val processingState by viewModel.processingState.collectAsState()
 
     // Collect one-shot navigation/error events from the ViewModel.
-    // NavigateToSuccess fires when SDK emits TransactionComplete.
+    // NavigateToSuccess fires after transferPosting() completes successfully.
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is TransferConfirmViewModel.UiEvent.NavigateToSuccess -> onConfirm()
                 is TransferConfirmViewModel.UiEvent.ShowError -> {
-                    // Error handling UI (snackbar / dialog) will be enhanced in Task 4-6.
-                    // For now, navigating to success is kept via the confirm button.
+                    // Partners: Token errors (isTokenError=true) indicate the user
+                    // must navigate back and restart the flow. Other errors may allow retry.
+                    if (event.isTokenError) {
+                        onBack()
+                    }
                 }
             }
         }
@@ -82,49 +87,93 @@ fun TransferConfirmScreen(
                 )
             }
         ) { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                ConfirmRow(
-                    stringResource(R.string.transfer_tipe_transaksi),
-                    if (variant == FlowVariant.CashWithdrawal) "Tarik Tunai" else viewModel.type
-                )
-                ConfirmRow(stringResource(R.string.transfer_bank_tujuan), viewModel.bankName)
-                ConfirmRow(stringResource(R.string.transfer_rekening_tujuan), viewModel.accountNo)
-                ConfirmRow(stringResource(R.string.transfer_pemilik_rekening), viewModel.accountName)
-                ConfirmRow(stringResource(R.string.transfer_nominal), viewModel.amount)
-                ConfirmRow(stringResource(R.string.transfer_berita), viewModel.remark)
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = onCancel,
-                        modifier = Modifier.weight(1f),
-                        shape = MaterialTheme.shapes.small
+            when (val state = uiState) {
+                is TransferConfirmViewModel.ConfirmUiState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(stringResource(R.string.transfer_batal))
+                        CircularProgressIndicator()
                     }
-                    Button(
-                        onClick = onConfirm,
-                        modifier = Modifier.weight(1f),
-                        enabled = !processingState.isProcessing,
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
-                        shape = MaterialTheme.shapes.small
+                }
+
+                is TransferConfirmViewModel.ConfirmUiState.Error -> {
+                    Column(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxSize()
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            stringResource(
-                                if (variant == FlowVariant.CashWithdrawal) R.string.home_action_tarik_tunai
-                                else R.string.transfer_action_transfer
-                            ),
-                            color = Color.White
+                            text = state.message,
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (state.isTokenError) {
+                            TextButton(onClick = onBack) {
+                                Text(stringResource(R.string.common_back))
+                            }
+                        } else {
+                            TextButton(onClick = { viewModel.retryInquiry() }) {
+                                Text(stringResource(R.string.common_retry))
+                            }
+                        }
+                    }
+                }
+
+                is TransferConfirmViewModel.ConfirmUiState.InquirySuccess -> {
+                    Column(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    ) {
+                        ConfirmRow(
+                            stringResource(R.string.transfer_tipe_transaksi),
+                            if (variant == FlowVariant.CashWithdrawal) "Tarik Tunai" else state.type
+                        )
+                        ConfirmRow(stringResource(R.string.transfer_bank_tujuan), state.bankName)
+                        ConfirmRow(stringResource(R.string.transfer_rekening_tujuan), state.accountNo)
+                        ConfirmRow(stringResource(R.string.transfer_pemilik_rekening), state.accountName)
+                        ConfirmRow(stringResource(R.string.transfer_nominal), state.amount)
+                        ConfirmRow(stringResource(R.string.transfer_admin_fee), state.adminFee)
+                        ConfirmRow(stringResource(R.string.transfer_total), state.totalAmount)
+                        ConfirmRow(stringResource(R.string.transfer_berita), state.remark)
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = onCancel,
+                                modifier = Modifier.weight(1f),
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Text(stringResource(R.string.transfer_batal))
+                            }
+                            Button(
+                                onClick = { viewModel.confirmTransfer() },
+                                modifier = Modifier.weight(1f),
+                                enabled = !processingState.isProcessing,
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Text(
+                                    stringResource(
+                                        if (variant == FlowVariant.CashWithdrawal) R.string.home_action_tarik_tunai
+                                        else R.string.transfer_action_transfer
+                                    ),
+                                    color = Color.White
+                                )
+                            }
+                        }
                     }
                 }
             }

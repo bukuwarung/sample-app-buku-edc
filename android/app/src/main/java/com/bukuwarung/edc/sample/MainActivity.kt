@@ -42,19 +42,29 @@ import com.bukuwarung.edc.ui.transfer.TransferPinViewModel
 import com.bukuwarung.edc.ui.transfer.TransferRekeningTujuanScreen
 import com.bukuwarung.edc.ui.transfer.TransferRekeningTujuanViewModel
 import com.bukuwarung.edc.ui.transfer.TransferSelectAccountScreen
+import com.bukuwarung.edc.ui.transfer.TransferFlowStateHolder
 import com.bukuwarung.edc.ui.transfer.TransferSuccessScreen
 import com.bukuwarung.edc.ui.transfer.TransferSuccessViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    /**
+     * Partners: TransferFlowStateHolder is a @Singleton that accumulates user input
+     * across the multi-screen transfer flow. It is populated here in the navigation
+     * callbacks and consumed by ViewModels via Hilt injection.
+     */
+    @Inject lateinit var transferFlowState: TransferFlowStateHolder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SampleBukuEDCTheme(darkTheme = false) {
                 Surface(color = Colors.White) {
-                    MainNavigation(intent = intent)
+                    MainNavigation(intent = intent, transferFlowState = transferFlowState)
                 }
             }
         }
@@ -62,7 +72,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainNavigation(intent: Intent?) {
+fun MainNavigation(intent: Intent?, transferFlowState: TransferFlowStateHolder) {
     val navController = rememberNavController()
 
     LaunchedEffect(intent) {
@@ -97,10 +107,15 @@ fun MainNavigation(intent: Intent?) {
             )
         }
         composable(Screen.TransferSelectAccount.route) {
+            // Partners: Clear any previous transfer state when starting a new flow.
             TransferSelectAccountScreen(
                 variant = FlowVariant.Transfer,
                 onBack = { navController.popBackStack() },
-                onAccountSelected = {
+                onAccountSelected = { accountType ->
+                    // Partners: Save the selected account type (TABUNGAN → SAVINGS, GIRO → CHECKING)
+                    // for the transferInquiry() call later.
+                    transferFlowState.clear()
+                    transferFlowState.accountType = if (accountType == "GIRO") "CHECKING" else "SAVINGS"
                     navController.navigate(Screen.TransferPilihBank.route)
                 }
             )
@@ -111,6 +126,10 @@ fun MainNavigation(intent: Intent?) {
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onBankSelected = { bank ->
+                    // Partners: Save the selected bank name and derive a bank code.
+                    // In production, use actual bank codes from your bank list API.
+                    transferFlowState.bankName = bank
+                    transferFlowState.bankCode = bank.uppercase()
                     navController.navigate(Screen.TransferRekeningTujuan.route)
                 }
             )
@@ -119,9 +138,14 @@ fun MainNavigation(intent: Intent?) {
             val viewModel: TransferRekeningTujuanViewModel = hiltViewModel()
             TransferRekeningTujuanScreen(
                 viewModel = viewModel,
-                bankName = "Mandiri", // Mocked for simplicity
+                bankName = transferFlowState.bankName,
                 onBack = { navController.popBackStack() },
                 onContinue = { account, amount, remark ->
+                    // Partners: Save the destination account, amount, and notes
+                    // for the transferInquiry() call on the Confirm screen.
+                    transferFlowState.accountNumber = account
+                    transferFlowState.amount = amount
+                    transferFlowState.notes = remark
                     navController.navigate(Screen.TransferInsertCard.route)
                 }
             )
