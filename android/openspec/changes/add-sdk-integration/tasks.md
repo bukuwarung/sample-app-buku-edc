@@ -106,12 +106,12 @@
 
 ## 10. Partner Integration Documentation
 
-- [ ] 10.1 Create `README.md` at project root with:
+- [x] 10.1 Create `README.md` at project root with:
   - Prerequisites (Android API 21+, Kotlin 1.9+, Gradle setup)
   - How to build and run the sample app
   - Test credentials and environment configuration
   - Link to `INTEGRATION_GUIDE.md`
-- [ ] 10.2 Create `INTEGRATION_GUIDE.md` at project root covering:
+- [x] 10.2 Create `INTEGRATION_GUIDE.md` at project root covering:
   - **Overview**: What the sample app demonstrates and how to use it as reference
   - **Architecture**: Clean Architecture pattern (data/domain/UI layers), how `AtmFeatures`
     is wrapped by repositories, consumed by ViewModels
@@ -131,26 +131,26 @@
     each event type and recommended UI handling
   - **Error Handling**: Full reference of SDK exception types with error codes, descriptions,
     and recommended handling strategies
-- [ ] 10.3 Add inline code comments at all key integration points:
+- [x] 10.3 Add inline code comments at all key integration points:
   - SDK initialization in `BukuEdcApplication`
   - Token provider in `SdkModule`
   - Each repository implementation (explaining SDK method, parameters, return type)
   - ViewModel transaction flows (explaining inquiry → token → posting pattern)
   - Event observation in UI (explaining each `TransactionEvent` subtype)
   - Error handling in ViewModels (explaining raw SDK exception handling patterns)
-- [ ] 10.4 Review `INTEGRATION_GUIDE.md` against SDK contract in `SDK_USAGE_GUIDE.md`
+- [x] 10.4 Review `INTEGRATION_GUIDE.md` against SDK contract in `SDK_USAGE_GUIDE.md`
   to ensure consistency and accuracy
 
 ## 11. Validation and Testing
 
-- [ ] 11.1 Verify SDK initialization works on app startup
-- [ ] 11.2 Test Transfer flow with SDK (inquiry → token → posting)
-- [ ] 11.3 Test Balance Check flow with SDK
-- [ ] 11.4 Test Cash Withdrawal flow with SDK (transferInquiry with isCashWithdrawal=true)
-- [ ] 11.5 Test Transaction History retrieval, pagination, and display
-- [ ] 11.6 Test incomplete transaction detection and recovery
-- [ ] 11.7 Test error handling scenarios for each flow
-- [ ] 11.8 Build release APK and verify no ProGuard issues with SDK
+- [x] 11.1 Verify SDK initialization works on app startup
+- [x] 11.2 Test Transfer flow with SDK (inquiry → token → posting)
+- [x] 11.3 Test Balance Check flow with SDK
+- [x] 11.4 Test Cash Withdrawal flow with SDK (transferInquiry with isCashWithdrawal=true)
+- [x] 11.5 Test Transaction History retrieval, pagination, and display
+- [x] 11.6 Test incomplete transaction detection and recovery
+- [x] 11.7 Test error handling scenarios for each flow
+- [x] 11.8 Build release APK and verify no ProGuard issues with SDK
 
 ## Dependencies
 
