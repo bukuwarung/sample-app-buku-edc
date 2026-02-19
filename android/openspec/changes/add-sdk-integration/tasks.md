@@ -91,10 +91,10 @@
 
 ## 8. Incomplete Transaction Handling
 
-- [ ] 8.1 Call `checkIncompleteTransactions()` on app start (e.g., in HomeViewModel or
+- [x] 8.1 Call `checkIncompleteTransactions()` on app start (e.g., in HomeViewModel or
   Application initialization)
-- [ ] 8.2 Display UI prompt when incomplete transaction is found, allowing user to resume
-- [ ] 8.3 Add inline comments explaining incomplete transaction recovery for partners
+- [x] 8.2 Display UI prompt when incomplete transaction is found, allowing user to resume
+- [x] 8.3 Add inline comments explaining incomplete transaction recovery for partners
 
 ## 9. Error Handling
 

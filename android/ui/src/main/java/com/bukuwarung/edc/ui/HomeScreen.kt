@@ -28,15 +28,23 @@ import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -51,6 +59,9 @@ import com.bukuwarung.edc.domain.settings.AccountSettings
 import com.bukuwarung.edc.domain.settings.BankAccount
 import com.bukuwarung.edc.domain.settings.GetBankAccountsUseCase
 import com.bukuwarung.edc.domain.settings.SettingsRepository
+import com.bukuwarung.edc.domain.transaction.CardInfo
+import com.bukuwarung.edc.domain.transaction.CardRepository
+import com.bukuwarung.edc.domain.transaction.IncompleteTransactionInfo
 import com.bukuwarung.edc.ui.theme.Colors
 import kotlinx.coroutines.flow.flowOf
 
@@ -67,6 +78,18 @@ fun HomeScreen(
     onNavigateToSettings: () -> Unit
 ) {
     val context = LocalContext.current
+
+    // Partners: Observe incomplete transaction state. If a pending transaction is detected
+    // on app start, show a dialog prompting the user to acknowledge it.
+    val incompleteTransaction by viewModel.incompleteTransaction.collectAsState()
+    incompleteTransaction?.let { incomplete ->
+        IncompleteTransactionDialog(
+            transactionId = incomplete.transactionId,
+            type = incomplete.type,
+            amount = incomplete.amount.toString(),
+            onDismiss = { viewModel.dismissIncompleteTransaction() }
+        )
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.uiEvents.collect { event ->
@@ -245,6 +268,74 @@ fun ActionItem(
     }
 }
 
+/**
+ * Dialog shown when an incomplete (pending) transaction is detected on app start.
+ *
+ * Partners: `AtmFeatures.checkIncompleteTransactions()` is called in [HomeViewModel.init].
+ * If a non-null [IncompleteTransactionInfo] is returned, this dialog is displayed with the
+ * transaction details. The user can dismiss the dialog to continue using the app.
+ *
+ * In a production app, you may want to add a "Resume" action that navigates the user
+ * to the appropriate transaction flow to complete the pending transaction.
+ */
+@Composable
+private fun IncompleteTransactionDialog(
+    transactionId: String,
+    type: String,
+    amount: String,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                stringResource(R.string.incomplete_transaction_title),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column {
+                Text(stringResource(R.string.incomplete_transaction_desc))
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    "${stringResource(R.string.transfer_tipe_transaksi)}: ${formatTransactionType(type)}",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    "ID: $transactionId",
+                    fontSize = 12.sp,
+                    color = Colors.TextGray
+                )
+                Text(
+                    "${stringResource(R.string.transfer_nominal)}: $amount",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(stringResource(R.string.incomplete_transaction_dismiss), color = Color.White)
+            }
+        }
+    )
+}
+
+/**
+ * Partners: Maps SDK transaction type strings to user-friendly labels.
+ */
+private fun formatTransactionType(type: String): String = when (type.uppercase()) {
+    "TRANSFER" -> "Transfer"
+    "BALANCE" -> "Cek Saldo"
+    "WITHDRAWAL" -> "Tarik Tunai"
+    else -> type
+}
+
 @Preview(showBackground = true, backgroundColor = Colors.PrimaryGreenColor)
 @Composable
 fun HomeScreenPreview() {
@@ -267,12 +358,21 @@ fun HomeScreenPreview() {
         override suspend fun setAccountId(accountId: String) {}
     }
 
+    val mockCardRepository = object : CardRepository {
+        override suspend fun getCardInfo(): Result<CardInfo> = Result.success(
+            CardInfo(cardNumber = "", cardHolderName = "")
+        )
+        override suspend fun checkIncompleteTransactions(): Result<IncompleteTransactionInfo?> =
+            Result.success(null)
+    }
+
     HomeScreen(
         viewModel = HomeViewModel(
             CheckCashWithdrawalEligibilityUseCase(
                 GetBankAccountsUseCase(mockRepository)
             ),
-            CheckIsFirstTimeUserUseCase(mockRepository)
+            CheckIsFirstTimeUserUseCase(mockRepository),
+            mockCardRepository
         ),
         onNavigateToTransfer = {},
         onNavigateToBalanceCheck = {},

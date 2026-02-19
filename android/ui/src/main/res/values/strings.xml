@@ -103,6 +103,11 @@
     <string name="settings_toast_feature_unavailable">Fitur belum tersedia</string>
     <string name="settings_toast_store_name_updated">Berhasil ubah nama toko</string>
 
+    <!-- Incomplete Transaction -->
+    <string name="incomplete_transaction_title">Transaksi Tertunda</string>
+    <string name="incomplete_transaction_desc">Ditemukan transaksi yang belum selesai dari sesi sebelumnya.</string>
+    <string name="incomplete_transaction_dismiss">Tutup</string>
+
     <!-- Transaction History -->
     <string name="history_title">Riwayat Transaksi</string>
     <string name="history_loading">Memuat riwayat transaksi…</string>
