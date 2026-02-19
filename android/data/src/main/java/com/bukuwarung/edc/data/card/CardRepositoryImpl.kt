@@ -1,5 +1,6 @@
 package com.bukuwarung.edc.data.card
 
+import com.bukuwarung.edc.data.util.runSuspendCatching
 import com.bukuwarung.edc.domain.transaction.CardInfo
 import com.bukuwarung.edc.domain.transaction.CardRepository
 import com.bukuwarung.edc.domain.transaction.IncompleteTransactionInfo
@@ -30,7 +31,7 @@ class CardRepositoryImpl @Inject constructor(
      *
      * @return [CardInfo] mapped from SDK's CardInfo response
      */
-    override suspend fun getCardInfo(): Result<CardInfo> = runCatching {
+    override suspend fun getCardInfo(): Result<CardInfo> = runSuspendCatching {
         val sdkCardInfo = atmFeatures.getCardInfo().getOrThrow()
         CardInfo(
             cardNumber = sdkCardInfo.pan,
@@ -47,7 +48,7 @@ class CardRepositoryImpl @Inject constructor(
      * to resume or discard the pending transaction before proceeding.
      */
     override suspend fun checkIncompleteTransactions(): Result<IncompleteTransactionInfo?> =
-        runCatching {
+        runSuspendCatching {
             atmFeatures.checkIncompleteTransactions().getOrThrow()?.let { incomplete ->
                 IncompleteTransactionInfo(
                     transactionId = incomplete.transactionId,

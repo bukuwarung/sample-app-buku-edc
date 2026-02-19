@@ -1,5 +1,6 @@
 package com.bukuwarung.edc.data.transaction
 
+import com.bukuwarung.edc.data.util.runSuspendCatching
 import com.bukuwarung.edc.domain.transaction.BalanceInfo
 import com.bukuwarung.edc.domain.transaction.BalanceRepository
 import com.bukuwarung.edc.sdk.AtmFeatures
@@ -34,7 +35,7 @@ class BalanceRepositoryImpl @Inject constructor(
     override suspend fun checkBalance(
         accountId: String,
         accountType: String
-    ): Result<BalanceInfo> = runCatching {
+    ): Result<BalanceInfo> = runSuspendCatching {
         val sdkAccountType = AccountType.fromString(accountType)
 
         val receipt = atmFeatures.checkBalance(

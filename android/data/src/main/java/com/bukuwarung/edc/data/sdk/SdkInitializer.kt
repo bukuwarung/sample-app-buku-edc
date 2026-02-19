@@ -53,8 +53,13 @@ class SdkInitializer @Inject constructor() {
             logListener = logListener
         )
 
-        sdk = BukuEdcSdkFactory.initialize(application, config)
-        Log.i(TAG, "SDK initialized successfully (SANDBOX, testingMock=true)")
+        try {
+            sdk = BukuEdcSdkFactory.initialize(application, config)
+            Log.i(TAG, "SDK initialized successfully (SANDBOX, testingMock=true)")
+        } catch (e: Exception) {
+            Log.e(TAG, "SDK initialization failed", e)
+            throw e
+        }
     }
 
     /**

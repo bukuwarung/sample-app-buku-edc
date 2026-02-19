@@ -1,5 +1,6 @@
 package com.bukuwarung.edc.data.transaction
 
+import com.bukuwarung.edc.data.util.runSuspendCatching
 import com.bukuwarung.edc.domain.transaction.HistoryItemInfo
 import com.bukuwarung.edc.domain.transaction.HistoryPaginationInfo
 import com.bukuwarung.edc.domain.transaction.HistoryRepository
@@ -42,7 +43,7 @@ class HistoryRepositoryImpl @Inject constructor(
         accountId: String,
         pageNumber: Int,
         pageSize: Int
-    ): Result<TransactionHistoryInfo> = runCatching {
+    ): Result<TransactionHistoryInfo> = runSuspendCatching {
         // Partners: TransactionFilter is the SDK model that controls pagination and filtering.
         // pageNumber is 0-based, pageSize defaults to 20, order defaults to "DESC".
         val filter = TransactionFilter(

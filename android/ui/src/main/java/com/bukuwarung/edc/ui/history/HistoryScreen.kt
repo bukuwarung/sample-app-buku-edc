@@ -186,7 +186,7 @@ private fun HistoryList(
         derivedStateOf {
             val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
             val totalItems = listState.layoutInfo.totalItemsCount
-            lastVisibleItem >= totalItems - 3 && hasMorePages && !isLoadingMore
+            totalItems > 0 && lastVisibleItem >= totalItems - 3 && hasMorePages && !isLoadingMore
         }
     }
 
@@ -316,9 +316,10 @@ private fun StatusBadge(status: String) {
  * Partners: The SDK returns type strings like "TRANSFER", "BALANCE_INQUIRY",
  * "CASH_WITHDRAWAL". Map these to localized labels for your UI.
  */
+@Composable
 private fun formatTransactionType(type: String): String = when (type.uppercase()) {
-    "TRANSFER" -> "Transfer"
-    "BALANCE_INQUIRY" -> "Cek Saldo"
-    "CASH_WITHDRAWAL" -> "Tarik Tunai"
+    "TRANSFER" -> stringResource(R.string.transaction_type_transfer)
+    "BALANCE_INQUIRY" -> stringResource(R.string.transaction_type_balance_inquiry)
+    "CASH_WITHDRAWAL" -> stringResource(R.string.transaction_type_cash_withdrawal)
     else -> type
 }

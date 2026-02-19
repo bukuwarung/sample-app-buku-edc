@@ -1,5 +1,6 @@
 package com.bukuwarung.edc.data.transaction
 
+import com.bukuwarung.edc.data.util.runSuspendCatching
 import com.bukuwarung.edc.domain.transaction.TransferReceiptInfo
 import com.bukuwarung.edc.domain.transaction.TransferRepository
 import com.bukuwarung.edc.sdk.AtmFeatures
@@ -20,7 +21,7 @@ import javax.inject.Inject
  * 2. [transferPosting] → calls [AtmFeatures.transferPosting] with the token from step 1.
  *    Returns final receipt data (RRN, approval code, status).
  *
- * Both methods use `runCatching` so SDK exceptions (DeviceSdkException, BackendException,
+ * Both methods use `runSuspendCatching` so SDK exceptions (DeviceSdkException, BackendException,
  * TokenExpiredException, InvalidTokenException) are wrapped in [Result.failure] for
  * the ViewModel to handle.
  */
@@ -44,7 +45,7 @@ class TransferRepositoryImpl @Inject constructor(
         notes: String,
         isCashWithdrawal: Boolean,
         accountType: String
-    ): Result<TransferReceiptInfo> = runCatching {
+    ): Result<TransferReceiptInfo> = runSuspendCatching {
         // Partners: Construct BankDetails from the user's bank selection.
         // The SDK requires both bankCode and bankName.
         val destinationDetails = BankDetails(
@@ -74,7 +75,7 @@ class TransferRepositoryImpl @Inject constructor(
     override suspend fun transferPosting(
         accountId: String,
         transactionToken: String
-    ): Result<TransferReceiptInfo> = runCatching {
+    ): Result<TransferReceiptInfo> = runSuspendCatching {
         val receipt = atmFeatures.transferPosting(
             accountId = accountId,
             transactionToken = transactionToken

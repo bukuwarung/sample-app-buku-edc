@@ -42,7 +42,7 @@ class TransferInsertCardViewModel @Inject constructor(
         data object NavigateToCardInfo : UiEvent()
     }
 
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    private val _uiEvent = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
     val uiEvent: SharedFlow<UiEvent> = _uiEvent.asSharedFlow()
 
     /** Visual state: which animation/message to show on the Insert Card screen. */

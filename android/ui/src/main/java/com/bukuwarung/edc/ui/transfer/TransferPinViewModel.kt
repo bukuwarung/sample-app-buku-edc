@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -56,10 +55,10 @@ class TransferPinViewModel @Inject constructor(
     private fun observePinEvents() {
         viewModelScope.launch {
             transactionEventRepository.transactionEvents
-                .filterIsInstance<TransactionEvent.EnteringPin>()
-                .collect {
-                    // SDK has signaled that the cardholder is entering their PIN
-                    _isPinPromptActive.value = true
+                .collect { event ->
+                    // Derive PIN prompt state from the current event type.
+                    // Active only while the SDK signals EnteringPin; reset on any subsequent event.
+                    _isPinPromptActive.value = event is TransactionEvent.EnteringPin
                 }
         }
     }

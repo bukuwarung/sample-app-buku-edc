@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
+// Partners: This sample uses plain-text DataStore for simplicity. In production,
+// use EncryptedSharedPreferences (AndroidX Security) or Android Keystore-backed
+// encryption for storing access tokens and other sensitive credentials.
 class DataStoreSettingsRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val fakeSettingsRepository: FakeSettingsRepository // Delegate other calls to fake for now

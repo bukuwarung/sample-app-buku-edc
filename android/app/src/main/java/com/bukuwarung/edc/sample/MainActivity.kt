@@ -213,6 +213,7 @@ fun MainNavigation(
                     navController.navigate(Screen.TransferSuccess.route)
                 },
                 onCancel = {
+                    transferFlowState.clear()
                     navController.popBackStack(Screen.Home.route, false)
                 }
             )
@@ -222,6 +223,7 @@ fun MainNavigation(
             TransferSuccessScreen(
                 viewModel = viewModel,
                 onClose = {
+                    transferFlowState.clear()
                     navController.popBackStack(Screen.Home.route, false)
                 }
             )
@@ -402,6 +404,7 @@ fun MainNavigation(
                     navController.navigate(Screen.CashWithdrawalSuccess.route)
                 },
                 onCancel = {
+                    transferFlowState.clear()
                     navController.popBackStack(Screen.Home.route, false)
                 }
             )
@@ -411,6 +414,7 @@ fun MainNavigation(
             TransferSuccessScreen(
                 viewModel = viewModel,
                 onClose = {
+                    transferFlowState.clear()
                     navController.popBackStack(Screen.Home.route, false)
                 }
             )

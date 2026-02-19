@@ -106,7 +106,6 @@ class HomeViewModel @Inject constructor(
 }
 
 sealed interface HomeUiEvent {
-    data class ShowToast(val action: HomeAction) : HomeUiEvent
     data object NavigateToTransfer : HomeUiEvent
     data object NavigateToBalanceCheck : HomeUiEvent
     data object NavigateToCashWithdrawal : HomeUiEvent

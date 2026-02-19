@@ -1,6 +1,5 @@
 package com.bukuwarung.edc.ui
 
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -77,8 +75,6 @@ fun HomeScreen(
     onNavigateToHistory: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
-    val context = LocalContext.current
-
     // Partners: Observe incomplete transaction state. If a pending transaction is detected
     // on app start, show a dialog prompting the user to acknowledge it.
     val incompleteTransaction by viewModel.incompleteTransaction.collectAsState()
@@ -94,10 +90,6 @@ fun HomeScreen(
     LaunchedEffect(viewModel) {
         viewModel.uiEvents.collect { event ->
             when (event) {
-                is HomeUiEvent.ShowToast -> {
-                    val label = context.getString(event.action.labelResId)
-                    Toast.makeText(context, "$label clicked", Toast.LENGTH_SHORT).show()
-                }
                 HomeUiEvent.NavigateToTransfer -> {
                     onNavigateToTransfer()
                 }
@@ -320,7 +312,7 @@ private fun IncompleteTransactionDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
                 shape = MaterialTheme.shapes.small
             ) {
-                Text(stringResource(R.string.incomplete_transaction_dismiss), color = Color.White)
+                Text(stringResource(R.string.common_tutup), color = Color.White)
             }
         }
     )
@@ -329,10 +321,11 @@ private fun IncompleteTransactionDialog(
 /**
  * Partners: Maps SDK transaction type strings to user-friendly labels.
  */
+@Composable
 private fun formatTransactionType(type: String): String = when (type.uppercase()) {
-    "TRANSFER" -> "Transfer"
-    "BALANCE" -> "Cek Saldo"
-    "WITHDRAWAL" -> "Tarik Tunai"
+    "TRANSFER" -> stringResource(R.string.transaction_type_transfer)
+    "BALANCE" -> stringResource(R.string.transaction_type_balance_inquiry)
+    "WITHDRAWAL" -> stringResource(R.string.transaction_type_cash_withdrawal)
     else -> type
 }
 

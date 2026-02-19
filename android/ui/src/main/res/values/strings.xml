@@ -106,7 +106,11 @@
     <!-- Incomplete Transaction -->
     <string name="incomplete_transaction_title">Transaksi Tertunda</string>
     <string name="incomplete_transaction_desc">Ditemukan transaksi yang belum selesai dari sesi sebelumnya.</string>
-    <string name="incomplete_transaction_dismiss">Tutup</string>
+
+    <!-- Transaction Types -->
+    <string name="transaction_type_transfer">Transfer</string>
+    <string name="transaction_type_balance_inquiry">Cek Saldo</string>
+    <string name="transaction_type_cash_withdrawal">Tarik Tunai</string>
 
     <!-- Transaction History -->
     <string name="history_title">Riwayat Transaksi</string>
