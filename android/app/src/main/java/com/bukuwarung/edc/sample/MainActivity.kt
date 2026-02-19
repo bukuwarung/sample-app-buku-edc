@@ -262,17 +262,9 @@ fun MainNavigation(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onContinue = {
-                    navController.navigate(Screen.BalanceCheckPin.route)
-                }
-            )
-        }
-        composable(Screen.BalanceCheckPin.route) {
-            val viewModel: TransferPinViewModel = hiltViewModel()
-            TransferPinScreen(
-                variant = FlowVariant.BalanceCheck,
-                viewModel = viewModel,
-                onBack = { navController.popBackStack() },
-                onPinEntered = { pin ->
+                    // Partners: The SDK's checkBalance() handles PIN entry internally via the
+                    // physical terminal keypad (TransactionEvent.EnteringPin). Skip the app-level
+                    // PIN screen and go straight to the Summary screen where checkBalance() runs.
                     navController.navigate(Screen.BalanceCheckSummary.route)
                 }
             )
