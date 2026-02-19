@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.ui.R
+import com.bukuwarung.edc.ui.common.ErrorState
 import com.bukuwarung.edc.ui.common.FlowVariant
 import com.bukuwarung.edc.ui.theme.Colors
 
@@ -100,30 +101,25 @@ fun TransferConfirmScreen(
                 }
 
                 is TransferConfirmViewModel.ConfirmUiState.Error -> {
-                    Column(
-                        modifier = Modifier
-                            .padding(padding)
-                            .fillMaxSize()
-                            .padding(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = state.message,
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        if (state.isTokenError) {
-                            TextButton(onClick = onBack) {
-                                Text(stringResource(R.string.common_back))
-                            }
+                    // Partners: Error state using the reusable ErrorState composable.
+                    // Transfer/withdrawal errors fall into two categories:
+                    // 1. Token errors (TokenExpiredException, InvalidTokenException) —
+                    //    non-recoverable, user must navigate back and restart the flow.
+                    //    Shows "Back" button via onBack.
+                    // 2. Other errors (DeviceSdkException, BackendException) —
+                    //    transient, may succeed on retry. Shows "Retry" button via onRetry.
+                    // See ErrorStateComposable.kt for full SDK error code reference.
+                    ErrorState(
+                        title = stringResource(R.string.transfer_transaksi_gagal),
+                        message = state.message,
+                        onRetry = if (!state.isTokenError) {
+                            { viewModel.retryInquiry() }
                         } else {
-                            TextButton(onClick = { viewModel.retryInquiry() }) {
-                                Text(stringResource(R.string.common_retry))
-                            }
-                        }
-                    }
+                            null
+                        },
+                        onBack = if (state.isTokenError) onBack else null,
+                        modifier = Modifier.padding(padding)
+                    )
                 }
 
                 is TransferConfirmViewModel.ConfirmUiState.InquirySuccess -> {

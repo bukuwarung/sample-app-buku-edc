@@ -98,8 +98,8 @@
 
 ## 9. Error Handling
 
-- [ ] 9.1 Create `ErrorStateComposable.kt` reusable error UI component
-- [ ] 9.2 Add error handling examples to each flow demonstrating SDK error categories:
+- [x] 9.1 Create `ErrorStateComposable.kt` reusable error UI component
+- [x] 9.2 Add error handling examples to each flow demonstrating SDK error categories:
   - `DeviceSdkException` (E01 card read, E02 card removed, E06 PIN cancelled, E21 timeout)
   - `BackendException` (30 format error, 55 invalid PIN, 03 invalid merchant)
   - `TokenExpiredException` / `InvalidTokenException`

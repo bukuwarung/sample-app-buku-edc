@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bukuwarung.edc.domain.transaction.HistoryItemInfo
 import com.bukuwarung.edc.ui.R
+import com.bukuwarung.edc.ui.common.ErrorState
 import com.bukuwarung.edc.ui.theme.Colors
 
 /**
@@ -138,43 +139,16 @@ fun HistoryScreen(
             }
 
             is HistoryViewModel.HistoryUiState.Error -> {
-                Box(
-                    modifier = Modifier
-                        .padding(padding)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(32.dp)
-                    ) {
-                        Text(
-                            stringResource(R.string.transfer_transaksi_gagal),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            state.message,
-                            color = Colors.TextGray,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Button(
-                            onClick = { viewModel.retry() },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF1565C0)
-                            ),
-                            shape = MaterialTheme.shapes.small
-                        ) {
-                            Text(
-                                stringResource(R.string.common_retry),
-                                color = Color.White
-                            )
-                        }
-                    }
-                }
+                // Partners: Error state using the reusable ErrorState composable.
+                // History fetch errors are typically BackendException (server/network issues)
+                // — these are transient and retryable.
+                // See ErrorStateComposable.kt for full SDK error code reference.
+                ErrorState(
+                    title = stringResource(R.string.transfer_transaksi_gagal),
+                    message = state.message,
+                    onRetry = { viewModel.retry() },
+                    modifier = Modifier.padding(padding)
+                )
             }
 
             is HistoryViewModel.HistoryUiState.Success -> {
