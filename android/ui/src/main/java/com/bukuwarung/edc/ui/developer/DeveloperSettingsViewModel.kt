@@ -19,12 +19,51 @@ class DeveloperSettingsViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = true
+            initialValue = false
+        )
+
+    val phoneNumber: StateFlow<String> = settingsRepository.getPhoneNumber()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ""
+        )
+
+    val accessToken: StateFlow<String> = settingsRepository.getAccessToken()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ""
+        )
+
+    val accountId: StateFlow<String> = settingsRepository.getAccountId()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ""
         )
 
     fun setFirstTimeUser(isFirstTime: Boolean) {
         viewModelScope.launch {
             settingsRepository.setIsFirstTimeUser(isFirstTime)
+        }
+    }
+
+    fun setPhoneNumber(phoneNumber: String) {
+        viewModelScope.launch {
+            settingsRepository.setPhoneNumber(phoneNumber.trim())
+        }
+    }
+
+    fun setAccessToken(accessToken: String) {
+        viewModelScope.launch {
+            settingsRepository.setAccessToken(accessToken.trim())
+        }
+    }
+
+    fun setAccountId(accountId: String) {
+        viewModelScope.launch {
+            settingsRepository.setAccountId(accountId.trim())
         }
     }
 }

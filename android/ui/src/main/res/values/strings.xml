@@ -20,6 +20,7 @@
     <string name="transfer_lanjut">Lanjut</string>
     <string name="transfer_batal">Batal</string>
     <string name="common_back">Back</string>
+    <string name="common_retry">Coba Lagi</string>
     <string name="common_close">Close</string>
     <string name="common_tutup">Tutup</string>
     <string name="transfer_bank_tujuan">Bank Tujuan</string>
@@ -30,6 +31,10 @@
     <string name="transfer_cari_bank">Cari Bank</string>
     <string name="transfer_masukkan_atau_gesek">Masukkan atau Gesek Kartu</string>
     <string name="transfer_masukkan_atau_gesek_desc">Silakan masukkan atau gesek kartu ATM pada mesin EDC.</string>
+    <string name="transfer_kartu_terdeteksi">Kartu Terdeteksi</string>
+    <string name="transfer_sedang_memasukkan_pin">Memasukkan PIN…</string>
+    <string name="transfer_sedang_memproses">Sedang memproses transaksi…</string>
+    <string name="transfer_transaksi_gagal">Transaksi Gagal</string>
     <string name="transfer_informasi_kartu">Informasi Kartu</string>
     <string name="transfer_informasi_kartu_desc">Silakan periksa informasi kartu di bawah ini</string>
     <string name="transfer_nomor_kartu">Nomor Kartu</string>
@@ -43,12 +48,19 @@
     <string name="transfer_pemilik_rekening">Pemilik Rekening</string>
     <string name="transfer_nominal">Nominal</string>
     <string name="transfer_berita">Berita</string>
+    <string name="transfer_admin_fee">Biaya Admin</string>
+    <string name="transfer_total">Total</string>
     <string name="transfer_action_transfer">Transfer</string>
     <string name="transfer_hore_berhasil">Hore! Transaksi berhasil</string>
     <string name="transfer_bukti_transaksi">Bukti Transaksi Pelanggan</string>
     <string name="transfer_label_waktu">Waktu</string>
     <string name="transfer_label_ref_no">Ref No.</string>
     <string name="transfer_label_transfer_berhasil">Transfer Berhasil</string>
+    <string name="transfer_label_approval_code">Kode Approval</string>
+    <string name="transfer_label_status">Status</string>
+    <string name="transfer_label_nominal">Nominal</string>
+    <string name="transfer_label_admin_fee">Biaya Admin</string>
+    <string name="transfer_label_total">Total</string>
     <string name="transfer_cetak_struk">Cetak Struk</string>
 
     <string name="balance_check_title">Cek Saldo</string>
@@ -90,6 +102,21 @@
 
     <string name="settings_toast_feature_unavailable">Fitur belum tersedia</string>
     <string name="settings_toast_store_name_updated">Berhasil ubah nama toko</string>
+
+    <!-- Incomplete Transaction -->
+    <string name="incomplete_transaction_title">Transaksi Tertunda</string>
+    <string name="incomplete_transaction_desc">Ditemukan transaksi yang belum selesai dari sesi sebelumnya.</string>
+
+    <!-- Transaction Types -->
+    <string name="transaction_type_transfer">Transfer</string>
+    <string name="transaction_type_balance_inquiry">Cek Saldo</string>
+    <string name="transaction_type_cash_withdrawal">Tarik Tunai</string>
+
+    <!-- Transaction History -->
+    <string name="history_title">Riwayat Transaksi</string>
+    <string name="history_loading">Memuat riwayat transaksi…</string>
+    <string name="history_empty_title">Belum Ada Riwayat</string>
+    <string name="history_empty_desc">Belum ada riwayat transaksi yang tersedia.</string>
 
     <!-- Cash Withdrawal -->
     <string name="tarik_tunai_title">Tarik Tunai</string>

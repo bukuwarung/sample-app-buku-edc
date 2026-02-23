@@ -14,6 +14,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        // SDK key for SANDBOX environment — partners replace with their own key
+        buildConfigField("String", "SDK_KEY", "\"sandbox-test-sdk-key-sample\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -36,7 +43,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation("com.bukuwarung.edc.sdk:core:0.1.0-SNAPSHOT")
+    implementation(libs.buku.edc.sdk)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -5,16 +5,12 @@ import com.bukuwarung.edc.domain.settings.BankAccount
 import com.bukuwarung.edc.domain.settings.DeviceInfo
 import com.bukuwarung.edc.domain.settings.SettingsRepository
 import com.bukuwarung.edc.domain.settings.StoreInfo
-import com.bukuwarung.edc.sdk.BukuEdcSdk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class FakeSettingsRepository @Inject constructor() : SettingsRepository {
     override suspend fun getAccountSettings(): AccountSettings {
-        // ... (rest remains same)
-        BukuEdcSdk.create()
-        BukuEdcSdk.setDebugMode(true)
         return AccountSettings(
             deviceInfo = DeviceInfo(
                 registeredPhoneNumber = "0813 1010 1111",
@@ -44,6 +40,30 @@ class FakeSettingsRepository @Inject constructor() : SettingsRepository {
     }
 
     override suspend fun setIsFirstTimeUser(isFirstTime: Boolean) {
+        // No-op for fake
+    }
+
+    override fun getPhoneNumber(): Flow<String> {
+        return flowOf("")
+    }
+
+    override suspend fun setPhoneNumber(phoneNumber: String) {
+        // No-op for fake
+    }
+
+    override fun getAccessToken(): Flow<String> {
+        return flowOf("")
+    }
+
+    override suspend fun setAccessToken(accessToken: String) {
+        // No-op for fake
+    }
+
+    override fun getAccountId(): Flow<String> {
+        return flowOf("")
+    }
+
+    override suspend fun setAccountId(accountId: String) {
         // No-op for fake
     }
 }
